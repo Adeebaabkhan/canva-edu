@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Payslip Generator</title>
+    <title>K-12 Teacher Payslip Generator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="faker.js"></script>
 </head>
 <body>
     <div class="container">
         <header class="app-header">
-            <h1>Professional Payslip Generator</h1>
-            <p class="subtitle">Generate realistic corporate payslips for educational verification purposes</p>
+            <h1>K-12 Teacher Payslip Generator</h1>
+            <p class="subtitle">Generate realistic teacher payslips for K-12 educational institutions worldwide</p>
         </header>
 
         <div class="form-section">
@@ -89,6 +89,84 @@
 
                     <button type="submit" class="generate-btn">Generate Payslip</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- Enhanced Download Panel (Canva-style) -->
+        <div id="download-panel" class="download-panel hidden">
+            <div class="download-container">
+                <div class="download-header">
+                    <h3>Download Options</h3>
+                    <button id="close-download" class="close-btn">&times;</button>
+                </div>
+                
+                <div class="format-selector">
+                    <h4>Select Format:</h4>
+                    <div class="format-buttons">
+                        <button class="format-btn active" data-format="pdf">
+                            <span class="format-icon">📄</span>
+                            <span>PDF</span>
+                            <small>Best for printing</small>
+                        </button>
+                        <button class="format-btn" data-format="jpg">
+                            <span class="format-icon">🖼️</span>
+                            <span>JPG</span>
+                            <small>High quality image</small>
+                        </button>
+                        <button class="format-btn" data-format="png">
+                            <span class="format-icon">🎨</span>
+                            <span>PNG</span>
+                            <small>With transparency</small>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="quality-selector">
+                    <h4>Quality:</h4>
+                    <div class="quality-options">
+                        <input type="range" id="qualitySlider" min="72" max="300" value="150" step="1">
+                        <div class="quality-labels">
+                            <span>Web (72dpi)</span>
+                            <span id="qualityLabel">Print (150dpi)</span>
+                            <span>High-res (300dpi)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="size-selector">
+                    <h4>Page Size:</h4>
+                    <select id="pageSize">
+                        <option value="A4">A4 (210 × 297 mm)</option>
+                        <option value="Letter">Letter (8.5 × 11 in)</option>
+                        <option value="Legal">Legal (8.5 × 14 in)</option>
+                        <option value="Custom">Custom Size</option>
+                    </select>
+                </div>
+
+                <div class="filename-input">
+                    <h4>File Name:</h4>
+                    <input type="text" id="customFilename" placeholder="PaySlip_SchoolName_TeacherName_Date">
+                    <small>Leave empty for auto-generated name</small>
+                </div>
+
+                <div class="download-actions">
+                    <button id="previewBtn" class="preview-btn">
+                        <span>👁️</span> Preview
+                    </button>
+                    <button id="downloadBtn" class="download-btn primary">
+                        <span>⬇️</span> Download
+                    </button>
+                    <button id="bulkDownloadBtn" class="bulk-download-btn">
+                        <span>📦</span> Bulk Download
+                    </button>
+                </div>
+
+                <div id="downloadProgress" class="download-progress hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <span class="progress-text">Preparing download...</span>
+                </div>
             </div>
         </div>
 
@@ -318,21 +396,15 @@
             const country = countrySelect.value;
             initializeFaker(country);
 
-            // Generate realistic data
-            const firstName = faker.name.firstName();
-            const lastName = faker.name.lastName();
-            const fullName = `${firstName} ${lastName}`;
+            // Generate realistic K-12 teacher data
+            const teacherName = faker.name.teacherName(country);
+            const experienceLevel = faker.random.arrayElement(['entry', 'mid', 'senior']);
             
-            document.getElementById('name').value = fullName;
-            document.getElementById('employee-id').value = `EMP${faker.datatype.number({min: 1000, max: 9999})}`;
-            document.getElementById('department').value = faker.random.arrayElement([
-                'Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations', 'IT Support'
-            ]);
-            document.getElementById('position').value = faker.random.arrayElement([
-                'Software Developer', 'Senior Developer', 'Marketing Manager', 'Sales Representative',
-                'HR Specialist', 'Financial Analyst', 'System Administrator', 'Project Manager'
-            ]);
-            document.getElementById('basic-salary').value = faker.datatype.number({min: 3000, max: 15000});
+            document.getElementById('name').value = teacherName;
+            document.getElementById('employee-id').value = faker.generateTeacherID(country);
+            document.getElementById('department').value = faker.random.arrayElement(faker.education.departments);
+            document.getElementById('position').value = faker.random.arrayElement(faker.education.jobTitles);
+            document.getElementById('basic-salary').value = faker.generateTeacherSalary(country, experienceLevel);
             
             // Select a random school
             const schoolSelect = document.getElementById('school');
@@ -340,9 +412,17 @@
                 schoolSelect.value = faker.random.arrayElement(SCHOOLS_BY_COUNTRY[country]);
             }
             
-            // Set current month
+            // Set academic year month (September as default for academic calendar)
             const currentDate = new Date();
-            const monthString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+            let academicMonth = 9; // September
+            let academicYear = currentDate.getFullYear();
+            
+            // If we're in Jan-Aug, use previous academic year
+            if (currentDate.getMonth() + 1 < 9) {
+                academicYear = academicYear - 1;
+            }
+            
+            const monthString = `${academicYear}-${String(academicMonth).padStart(2, '0')}`;
             document.getElementById('pay-period').value = monthString;
         }
 
@@ -352,52 +432,73 @@
             const gross = parseFloat(basicSalary);
             
             let deductions = {};
+            let benefits = {};
             let totalDeductions = 0;
+            let totalBenefits = 0;
 
-            // Calculate tax
-            const incomeTax = gross * config.taxRate;
+            // K-12 Teacher Benefits (added to gross)
+            const profDevAllowance = gross * 0.05; // 5% professional development allowance
+            const educationGrant = gross * 0.03;   // 3% education grant
+            benefits['Professional Development'] = profDevAllowance;
+            benefits['Education Grant'] = educationGrant;
+            totalBenefits += profDevAllowance + educationGrant;
+
+            const grossWithBenefits = gross + totalBenefits;
+
+            // Calculate tax on gross with benefits
+            const incomeTax = grossWithBenefits * config.taxRate;
             deductions['Income Tax'] = incomeTax;
             totalDeductions += incomeTax;
 
+            // K-12 Teacher specific deductions
+            const teacherUnionFee = gross * 0.02;     // 2% teacher union fee
+            const continuingEducation = gross * 0.015; // 1.5% continuing education
+            deductions['Teacher Union Fee'] = teacherUnionFee;
+            deductions['Continuing Education'] = continuingEducation;
+            totalDeductions += teacherUnionFee + continuingEducation;
+
             // Country-specific deductions
             if (country === 'India') {
-                const providentFund = gross * config.providentFund;
+                const providentFund = grossWithBenefits * config.providentFund;
                 deductions['Provident Fund'] = providentFund;
                 totalDeductions += providentFund;
             } else if (country === 'USA') {
-                const socialSecurity = gross * config.socialSecurity;
-                const medicare = gross * config.medicare;
+                const socialSecurity = grossWithBenefits * config.socialSecurity;
+                const medicare = grossWithBenefits * config.medicare;
                 deductions['Social Security'] = socialSecurity;
                 deductions['Medicare'] = medicare;
                 totalDeductions += socialSecurity + medicare;
             } else if (country === 'UK') {
-                const nationalInsurance = gross * config.nationalInsurance;
+                const nationalInsurance = grossWithBenefits * config.nationalInsurance;
                 deductions['National Insurance'] = nationalInsurance;
                 totalDeductions += nationalInsurance;
             } else if (country === 'Canada') {
-                const cpp = gross * config.cpp;
-                const ei = gross * config.ei;
+                const cpp = grossWithBenefits * config.cpp;
+                const ei = grossWithBenefits * config.ei;
                 deductions['CPP'] = cpp;
                 deductions['Employment Insurance'] = ei;
                 totalDeductions += cpp + ei;
             } else if (country === 'Australia') {
-                const superannuation = gross * config.superannuation;
+                const superannuation = grossWithBenefits * config.superannuation;
                 deductions['Superannuation'] = superannuation;
                 totalDeductions += superannuation;
             } else if (country === 'Singapore') {
-                const cpf = gross * config.cpf;
+                const cpf = grossWithBenefits * config.cpf;
                 deductions['CPF'] = cpf;
                 totalDeductions += cpf;
             } else if (country === 'Philippines') {
-                const sss = gross * config.sss;
+                const sss = grossWithBenefits * config.sss;
                 deductions['SSS'] = sss;
                 totalDeductions += sss;
             }
 
-            const netSalary = gross - totalDeductions;
+            const netSalary = grossWithBenefits - totalDeductions;
 
             return {
                 gross,
+                grossWithBenefits,
+                benefits,
+                totalBenefits,
                 deductions,
                 totalDeductions,
                 netSalary,
@@ -496,14 +597,20 @@
 
                     <div class="salary-section">
                         <div class="earnings-section">
-                            <h3>Earnings</h3>
+                            <h3>Earnings & Benefits</h3>
                             <div class="salary-item">
                                 <span>Basic Salary</span>
                                 <span class="amount">${formatCurrency(salaryBreakdown.gross, country)}</span>
                             </div>
+                            ${Object.entries(salaryBreakdown.benefits).map(([key, value]) => 
+                                `<div class="salary-item benefit-item">
+                                    <span>${key}</span>
+                                    <span class="amount">+${formatCurrency(value, country)}</span>
+                                </div>`
+                            ).join('')}
                             <div class="salary-total">
-                                <span>Gross Earnings</span>
-                                <span class="amount">${formatCurrency(salaryBreakdown.gross, country)}</span>
+                                <span>Gross Earnings (incl. Benefits)</span>
+                                <span class="amount">${formatCurrency(salaryBreakdown.grossWithBenefits, country)}</span>
                             </div>
                         </div>
 
@@ -590,10 +697,203 @@
                 outputDiv.innerHTML = payslipHTML;
                 outputDiv.classList.remove('hidden');
                 
+                // Show download panel after payslip is generated
+                document.getElementById('download-panel').classList.remove('hidden');
+                
                 // Scroll to output
                 outputDiv.scrollIntoView({ behavior: 'smooth' });
             });
+            
+            // Enhanced Download System (Canva-like)
+            setupDownloadSystem();
         });
+
+        // Download System Setup
+        function setupDownloadSystem() {
+            const downloadPanel = document.getElementById('download-panel');
+            const formatButtons = document.querySelectorAll('.format-btn');
+            const qualitySlider = document.getElementById('qualitySlider');
+            const qualityLabel = document.getElementById('qualityLabel');
+            const previewBtn = document.getElementById('previewBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const bulkDownloadBtn = document.getElementById('bulkDownloadBtn');
+            const closeBtn = document.getElementById('close-download');
+
+            // Format selection
+            formatButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    formatButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Quality slider
+            qualitySlider.addEventListener('input', function() {
+                const value = this.value;
+                let label = '';
+                if (value <= 100) label = `Web (${value}dpi)`;
+                else if (value <= 200) label = `Print (${value}dpi)`;
+                else label = `High-res (${value}dpi)`;
+                qualityLabel.textContent = label;
+            });
+
+            // Close download panel
+            closeBtn.addEventListener('click', function() {
+                downloadPanel.classList.add('hidden');
+            });
+
+            // Preview functionality
+            previewBtn.addEventListener('click', function() {
+                showPreviewModal();
+            });
+
+            // Download functionality
+            downloadBtn.addEventListener('click', function() {
+                const format = document.querySelector('.format-btn.active').dataset.format;
+                const quality = parseInt(qualitySlider.value);
+                const customName = document.getElementById('customFilename').value;
+                downloadPayslip(format, quality, customName);
+            });
+
+            // Bulk download functionality
+            bulkDownloadBtn.addEventListener('click', function() {
+                showBulkDownloadModal();
+            });
+        }
+
+        // Download payslip function (simplified)
+        async function downloadPayslip(format, quality, customName) {
+            const payslipElement = document.querySelector('.payslip-document');
+            if (!payslipElement) {
+                alert('Please generate a payslip first!');
+                return;
+            }
+
+            // Show progress
+            showDownloadProgress();
+
+            try {
+                const filename = customName || generateSmartFilename();
+                
+                if (format === 'pdf') {
+                    // Use browser's print to PDF functionality
+                    setTimeout(() => {
+                        window.print();
+                        hideDownloadProgress();
+                    }, 1000);
+                } else {
+                    // For now, show message about image formats
+                    alert(`${format.toUpperCase()} download will be available once external libraries are loaded. For now, you can use Print to PDF or take a screenshot.`);
+                    hideDownloadProgress();
+                }
+
+                addToDownloadHistory(filename);
+            } catch (error) {
+                console.error('Download failed:', error);
+                alert('Download failed. Please try again.');
+                hideDownloadProgress();
+            }
+        }
+
+        // Simplified PDF download using print
+        async function downloadAsPDF(element, filename, quality) {
+            window.print();
+        }
+
+        // Placeholder for image download
+        async function downloadAsImage(element, filename, format, quality) {
+            alert(`${format.toUpperCase()} download feature coming soon!`);
+        }
+
+        // Generate smart filename
+        function generateSmartFilename() {
+            const employeeName = document.getElementById('name').value || 'Teacher';
+            const school = document.getElementById('school').selectedOptions[0]?.text?.split(',')[0] || 'School';
+            const payPeriod = document.getElementById('pay-period').value || '';
+            const date = payPeriod ? payPeriod.replace('-', '') : new Date().toISOString().slice(0, 7).replace('-', '');
+            
+            const cleanName = employeeName.replace(/[^a-zA-Z0-9]/g, '');
+            const cleanSchool = school.replace(/[^a-zA-Z0-9]/g, '').slice(0, 15);
+            
+            return `PaySlip_${cleanSchool}_${cleanName}_${date}`;
+        }
+
+        // Show download progress
+        function showDownloadProgress() {
+            const progress = document.getElementById('downloadProgress');
+            progress.classList.remove('hidden');
+            
+            // Animate progress bar
+            const progressFill = progress.querySelector('.progress-fill');
+            progressFill.style.width = '0%';
+            setTimeout(() => {
+                progressFill.style.width = '100%';
+            }, 100);
+        }
+
+        // Hide download progress
+        function hideDownloadProgress() {
+            setTimeout(() => {
+                document.getElementById('downloadProgress').classList.add('hidden');
+            }, 1000);
+        }
+
+        // Add to download history (localStorage)
+        function addToDownloadHistory(filename) {
+            const history = JSON.parse(localStorage.getItem('downloadHistory') || '[]');
+            history.unshift({
+                filename,
+                date: new Date().toISOString(),
+                type: 'payslip'
+            });
+            
+            // Keep only last 10 downloads
+            if (history.length > 10) history.splice(10);
+            
+            localStorage.setItem('downloadHistory', JSON.stringify(history));
+        }
+
+        // Show preview modal
+        function showPreviewModal() {
+            const payslipElement = document.querySelector('.payslip-document');
+            if (!payslipElement) {
+                alert('Please generate a payslip first!');
+                return;
+            }
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content">
+                    <div class="preview-header">
+                        <h3>Payslip Preview</h3>
+                        <button class="close-preview">&times;</button>
+                    </div>
+                    <div class="preview-body">
+                        ${payslipElement.outerHTML}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Close modal
+            modal.querySelector('.close-preview').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+
+        // Show bulk download modal
+        function showBulkDownloadModal() {
+            alert('Bulk download feature: Generate multiple teacher payslips and download them as a ZIP file. This feature would allow batch processing of multiple teachers at once.');
+        }
     </script>
 </body>
 </html>
