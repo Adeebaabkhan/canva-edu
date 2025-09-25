@@ -3,43 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Document Generator</title>
+    <title>Professional Payslip Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/faker/3.1.0/faker.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="faker.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Professional Document Generator</h1>
-        <form id="document-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+        <header class="app-header">
+            <h1>Professional Payslip Generator</h1>
+            <p class="subtitle">Generate realistic corporate payslips for educational verification purposes</p>
+        </header>
 
-            <label for="country">Country:</label>
-            <select id="country" name="country" required>
-                <option value="USA">USA</option>
-                <option value="UK">UK</option>
-                <option value="Canada">Canada</option>
-                <!-- Add more countries as needed -->
-            </select>
+        <div class="form-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Employee Information</h2>
+                    <button type="button" id="auto-generate" class="auto-generate-btn">
+                        <span class="icon">🎲</span> Auto-Generate Data
+                    </button>
+                </div>
 
-            <label for="photo">Upload Photo:</label>
-            <input type="file" id="photo" name="photo" accept="image/*" required>
+                <form id="payslip-form">
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Enter employee name" required>
+                    </div>
 
-            <button type="submit">Generate Document</button>
-        </form>
-        <div id="output"></div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employee-id">Employee ID:</label>
+                            <input type="text" id="employee-id" name="employee-id" placeholder="EMP001" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <select id="country" name="country" required>
+                                <option value="USA">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="Canada">Canada</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department">Department:</label>
+                            <input type="text" id="department" name="department" placeholder="Engineering" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="position">Position:</label>
+                            <input type="text" id="position" name="position" placeholder="Software Developer" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="basic-salary">Basic Salary:</label>
+                            <input type="number" id="basic-salary" name="basic-salary" placeholder="5000" min="1000" max="50000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pay-period">Pay Period:</label>
+                            <input type="month" id="pay-period" name="pay-period" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photo">Employee Photo:</label>
+                        <input type="file" id="photo" name="photo" accept="image/*">
+                        <div class="photo-preview" id="photo-preview"></div>
+                    </div>
+
+                    <button type="submit" class="generate-btn">Generate Payslip</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="payslip-output" class="payslip-output hidden"></div>
     </div>
     <script>
-        document.getElementById('document-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
+        // Currency and tax configurations by country
+        const countryConfig = {
+            'USA': {
+                currency: '$',
+                taxRate: 0.22,
+                socialSecurity: 0.062,
+                medicare: 0.0145,
+                locale: 'en-US'
+            },
+            'UK': {
+                currency: '£',
+                taxRate: 0.20,
+                nationalInsurance: 0.12,
+                locale: 'en-GB'
+            },
+            'Canada': {
+                currency: 'CAD $',
+                taxRate: 0.15,
+                cpp: 0.0545,
+                ei: 0.0163,
+                locale: 'en-CA'
+            }
+        };
+
+        // Initialize Faker for different locales
+        function initializeFaker(country) {
+            switch(country) {
+                case 'UK':
+                    faker.locale = 'en_GB';
+                    break;
+                case 'Canada':
+                    faker.locale = 'en_CA';
+                    break;
+                default:
+                    faker.locale = 'en_US';
+            }
+        }
+
+        // Auto-generate realistic employee data
+        function autoGenerateData() {
             const country = document.getElementById('country').value;
-            const photo = document.getElementById('photo').files[0];
-            // Generate document logic goes here
-            const documentContent = `\n\n### Payslip\n\n**Name:** ${name}\n**Country:** ${country}\n**Photo:** <img src='${URL.createObjectURL(photo)}' alt='Photo' />`;
-            document.getElementById('output').innerHTML = documentContent;
-            // Add functionality to export the document as PDF or other formats
+            initializeFaker(country);
+
+            // Generate realistic data
+            const firstName = faker.name.firstName();
+            const lastName = faker.name.lastName();
+            const fullName = `${firstName} ${lastName}`;
+            
+            document.getElementById('name').value = fullName;
+            document.getElementById('employee-id').value = `EMP${faker.datatype.number({min: 1000, max: 9999})}`;
+            document.getElementById('department').value = faker.random.arrayElement([
+                'Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations', 'IT Support'
+            ]);
+            document.getElementById('position').value = faker.random.arrayElement([
+                'Software Developer', 'Senior Developer', 'Marketing Manager', 'Sales Representative',
+                'HR Specialist', 'Financial Analyst', 'System Administrator', 'Project Manager'
+            ]);
+            document.getElementById('basic-salary').value = faker.datatype.number({min: 3000, max: 15000});
+            
+            // Set current month
+            const currentDate = new Date();
+            const monthString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+            document.getElementById('pay-period').value = monthString;
+        }
+
+        // Calculate salary breakdown
+        function calculateSalary(basicSalary, country) {
+            const config = countryConfig[country];
+            const gross = parseFloat(basicSalary);
+            
+            let deductions = {};
+            let totalDeductions = 0;
+
+            // Calculate tax
+            const incomeTax = gross * config.taxRate;
+            deductions['Income Tax'] = incomeTax;
+            totalDeductions += incomeTax;
+
+            // Country-specific deductions
+            if (country === 'USA') {
+                const socialSecurity = gross * config.socialSecurity;
+                const medicare = gross * config.medicare;
+                deductions['Social Security'] = socialSecurity;
+                deductions['Medicare'] = medicare;
+                totalDeductions += socialSecurity + medicare;
+            } else if (country === 'UK') {
+                const nationalInsurance = gross * config.nationalInsurance;
+                deductions['National Insurance'] = nationalInsurance;
+                totalDeductions += nationalInsurance;
+            } else if (country === 'Canada') {
+                const cpp = gross * config.cpp;
+                const ei = gross * config.ei;
+                deductions['CPP'] = cpp;
+                deductions['Employment Insurance'] = ei;
+                totalDeductions += cpp + ei;
+            }
+
+            const netSalary = gross - totalDeductions;
+
+            return {
+                gross,
+                deductions,
+                totalDeductions,
+                netSalary,
+                currency: config.currency
+            };
+        }
+
+        // Format currency
+        function formatCurrency(amount, country) {
+            const config = countryConfig[country];
+            return new Intl.NumberFormat(config.locale, {
+                style: 'currency',
+                currency: country === 'USA' ? 'USD' : country === 'UK' ? 'GBP' : 'CAD'
+            }).format(amount);
+        }
+
+        // Generate professional payslip
+        function generatePayslip(formData, photoUrl) {
+            const country = formData.get('country');
+            const basicSalary = formData.get('basic-salary');
+            const salaryBreakdown = calculateSalary(basicSalary, country);
+            
+            const payPeriod = new Date(formData.get('pay-period') + '-01');
+            const payPeriodStr = payPeriod.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long' 
+            });
+
+            return `
+                <div class="payslip-document">
+                    <div class="company-header">
+                        <div class="company-logo">
+                            <div class="logo-circle">TS</div>
+                        </div>
+                        <div class="company-info">
+                            <h1>TECHSOFT SOLUTIONS PVT LTD</h1>
+                            <p>Excellence in Technology Solutions</p>
+                            <div class="company-details">
+                                <p>1234 Technology Drive, Innovation District</p>
+                                <p>Phone: +1-555-TECH-SOL | Email: hr@techsoftsolutions.com</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payslip-header">
+                        <h2>SALARY SLIP</h2>
+                        <div class="pay-period">Pay Period: ${payPeriodStr}</div>
+                    </div>
+
+                    <div class="employee-section">
+                        <div class="employee-info">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Employee Name:</label>
+                                    <span>${formData.get('name')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Employee ID:</label>
+                                    <span>${formData.get('employee-id')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Department:</label>
+                                    <span>${formData.get('department')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Position:</label>
+                                    <span>${formData.get('position')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Country:</label>
+                                    <span>${formData.get('country')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Pay Date:</label>
+                                    <span>${new Date().toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ${photoUrl ? `<div class="employee-photo"><img src="${photoUrl}" alt="Employee Photo"></div>` : ''}
+                    </div>
+
+                    <div class="salary-section">
+                        <div class="earnings-section">
+                            <h3>Earnings</h3>
+                            <div class="salary-item">
+                                <span>Basic Salary</span>
+                                <span class="amount">${formatCurrency(salaryBreakdown.gross, country)}</span>
+                            </div>
+                            <div class="salary-total">
+                                <span>Gross Earnings</span>
+                                <span class="amount">${formatCurrency(salaryBreakdown.gross, country)}</span>
+                            </div>
+                        </div>
+
+                        <div class="deductions-section">
+                            <h3>Deductions</h3>
+                            ${Object.entries(salaryBreakdown.deductions).map(([key, value]) => 
+                                `<div class="salary-item">
+                                    <span>${key}</span>
+                                    <span class="amount">-${formatCurrency(value, country)}</span>
+                                </div>`
+                            ).join('')}
+                            <div class="salary-total deduction-total">
+                                <span>Total Deductions</span>
+                                <span class="amount">-${formatCurrency(salaryBreakdown.totalDeductions, country)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="net-pay-section">
+                        <div class="net-pay">
+                            <span>Net Pay</span>
+                            <span class="amount">${formatCurrency(salaryBreakdown.netSalary, country)}</span>
+                        </div>
+                    </div>
+
+                    <div class="compliance-footer">
+                        <div class="disclaimer">
+                            <strong>FOR EDUCATIONAL VERIFICATION PURPOSES ONLY</strong>
+                            <p>This document is generated for educational and training purposes. It should not be used for any official, legal, or financial proceedings.</p>
+                        </div>
+                        <div class="generation-info">
+                            <p>Generated on: ${new Date().toLocaleString()}</p>
+                            <p>Document ID: EDU-${Date.now()}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handle photo preview
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('photo-preview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Photo Preview">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-generate button
+            document.getElementById('auto-generate').addEventListener('click', autoGenerateData);
+            
+            // Photo upload
+            document.getElementById('photo').addEventListener('change', handlePhotoUpload);
+            
+            // Form submission
+            document.getElementById('payslip-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(event.target);
+                const photoFile = document.getElementById('photo').files[0];
+                let photoUrl = null;
+                
+                if (photoFile) {
+                    photoUrl = URL.createObjectURL(photoFile);
+                }
+                
+                const payslipHTML = generatePayslip(formData, photoUrl);
+                const outputDiv = document.getElementById('payslip-output');
+                
+                outputDiv.innerHTML = payslipHTML;
+                outputDiv.classList.remove('hidden');
+                
+                // Scroll to output
+                outputDiv.scrollIntoView({ behavior: 'smooth' });
+            });
         });
     </script>
 </body>
