@@ -1,37 +1,46 @@
-<!-- Professional Blue Corporate Header -->
-<header style="background-color: #2C5F7C; color: white; padding: 20px; text-align: center;">
-    <h1>EDUTECH SOLUTIONS PVT LTD</h1>
-</header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Document Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/faker/3.1.0/faker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Professional Document Generator</h1>
+        <form id="document-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
 
-<!-- Employee Information Section -->
-<section style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
-    <h2>Employee Information</h2>
-    <p>Name: [Employee Name]</p>
-    <p>Position: [Employee Position]</p>
-    <p>Salary: <span style="color: #28a745;">₹ [Salary Amount]</span></p>
-</section>
+            <label for="country">Country:</label>
+            <select id="country" name="country" required>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Canada">Canada</option>
+                <!-- Add more countries as needed -->
+            </select>
 
-<!-- Company Contact Information -->
-<section style="margin: 10px;">
-    <h2>COMPANY CONTACT INFORMATION</h2>
-    <p>Phone: [Company Phone]</p>
-    <p>Email: [Company Email]</p>
-</section>
+            <label for="photo">Upload Photo:</label>
+            <input type="file" id="photo" name="photo" accept="image/*" required>
 
-<!-- Professional Footer -->
-<footer style="text-align: center; margin-top: 20px;">
-    <p>FOR EMPLOYMENT VERIFICATION PURPOSES ONLY - CONFIDENTIAL DOCUMENT</p>
-</footer>
-
-<!-- Enhanced Typography and Spacing -->
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        margin: 0;
-        padding: 0;
-    }
-    h1, h2 {
-        margin: 10px 0;
-    }
-</style>
+            <button type="submit">Generate Document</button>
+        </form>
+        <div id="output"></div>
+    </div>
+    <script>
+        document.getElementById('document-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const country = document.getElementById('country').value;
+            const photo = document.getElementById('photo').files[0];
+            // Generate document logic goes here
+            const documentContent = `\n\n### Payslip\n\n**Name:** ${name}\n**Country:** ${country}\n**Photo:** <img src='${URL.createObjectURL(photo)}' alt='Photo' />`;
+            document.getElementById('output').innerHTML = documentContent;
+            // Add functionality to export the document as PDF or other formats
+        });
+    </script>
+</body>
+</html>
