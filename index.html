@@ -217,6 +217,82 @@
             margin-top: 10px;
             display: none;
         }
+        
+        /* Receipt and Payslip Styles */
+        .receipt-document, .payslip-document {
+            width: 450px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            color: #333;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            margin: 30px auto;
+            position: relative;
+            display: none;
+            border: 2px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .receipt-document.show, .payslip-document.show {
+            display: block;
+        }
+        
+        .document-header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .document-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #333;
+        }
+        
+        .document-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .document-info {
+            margin-bottom: 20px;
+        }
+        
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 2px 0;
+        }
+        
+        .info-line.total {
+            border-top: 2px solid #333;
+            border-bottom: 2px double #333;
+            padding: 8px 0;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .document-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .receipt-number, .payslip-number {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -246,6 +322,8 @@
                         <option value="student-id">🎓 Student ID Card</option>
                         <option value="employee-id">👔 Employee ID Card</option>
                         <option value="faculty-id">📚 Faculty ID Card</option>
+                        <option value="teacher-receipt">📄 Teacher Receipt</option>
+                        <option value="teacher-payslip">💰 Teacher Payslip</option>
                     </select>
                 </div>
             </div>
@@ -322,6 +400,112 @@
                     <div class="info-value" id="card-institution"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Teacher Receipt Template -->
+    <div id="receipt-document" class="receipt-document">
+        <div class="receipt-number">Receipt #: <span id="receipt-number"></span></div>
+        <div class="document-header">
+            <div class="document-title">Teacher Receipt</div>
+            <div class="document-subtitle">Educational Services Payment Receipt</div>
+        </div>
+        
+        <div class="document-info">
+            <div class="info-line">
+                <span>Date:</span>
+                <span id="receipt-date"></span>
+            </div>
+            <div class="info-line">
+                <span>Teacher Name:</span>
+                <span id="receipt-teacher-name"></span>
+            </div>
+            <div class="info-line">
+                <span>Institution:</span>
+                <span id="receipt-institution"></span>
+            </div>
+            <div class="info-line">
+                <span>Position:</span>
+                <span id="receipt-position"></span>
+            </div>
+            <div class="info-line">
+                <span>Department:</span>
+                <span id="receipt-department"></span>
+            </div>
+            <div class="info-line">
+                <span>Service Period:</span>
+                <span id="receipt-period"></span>
+            </div>
+            <div class="info-line">
+                <span>Description:</span>
+                <span>Educational Services Rendered</span>
+            </div>
+            <div class="info-line total">
+                <span>Total Amount:</span>
+                <span id="receipt-amount"></span>
+            </div>
+        </div>
+        
+        <div class="document-footer">
+            <p>This receipt serves as proof of payment for educational services.</p>
+            <p>Thank you for your dedication to education.</p>
+        </div>
+    </div>
+
+    <!-- Teacher Payslip Template -->
+    <div id="payslip-document" class="payslip-document">
+        <div class="payslip-number">Payslip #: <span id="payslip-number"></span></div>
+        <div class="document-header">
+            <div class="document-title">Teacher Payslip</div>
+            <div class="document-subtitle">Monthly Salary Statement</div>
+        </div>
+        
+        <div class="document-info">
+            <div class="info-line">
+                <span>Pay Period:</span>
+                <span id="payslip-period"></span>
+            </div>
+            <div class="info-line">
+                <span>Employee Name:</span>
+                <span id="payslip-teacher-name"></span>
+            </div>
+            <div class="info-line">
+                <span>Employee ID:</span>
+                <span id="payslip-employee-id"></span>
+            </div>
+            <div class="info-line">
+                <span>Institution:</span>
+                <span id="payslip-institution"></span>
+            </div>
+            <div class="info-line">
+                <span>Position:</span>
+                <span id="payslip-position"></span>
+            </div>
+            <div class="info-line">
+                <span>Department:</span>
+                <span id="payslip-department"></span>
+            </div>
+            <div class="info-line">
+                <span>Basic Salary:</span>
+                <span id="payslip-basic-salary"></span>
+            </div>
+            <div class="info-line">
+                <span>Allowances:</span>
+                <span id="payslip-allowances"></span>
+            </div>
+            <div class="info-line">
+                <span>Deductions:</span>
+                <span id="payslip-deductions"></span>
+            </div>
+            <div class="info-line total">
+                <span>Net Salary:</span>
+                <span id="payslip-net-salary"></span>
+            </div>
+        </div>
+        
+        <div class="document-footer">
+            <p>This is a computer-generated payslip and does not require a signature.</p>
+            <p>For queries, contact HR Department.</p>
         </div>
     </div>
 
@@ -550,7 +734,9 @@
                 const photoElement = document.getElementById('employee-photo');
                 photoElement.src = photoPath;
                 
-                // Show the ID card
+                // Hide other documents and show ID card
+                document.getElementById('receipt-document').classList.remove('show');
+                document.getElementById('payslip-document').classList.remove('show');
                 document.getElementById('id-card').classList.add('show');
                 
                 // Scroll to the card
@@ -562,6 +748,109 @@
             } catch (error) {
                 console.error('Error generating ID card:', error);
                 showMessage('error', 'Failed to generate document. Please try again.');
+            }
+        }
+
+        /**
+         * Generates a teacher receipt document
+         * @param {Object} formData - The form data object
+         */
+        function generateReceipt(formData) {
+            try {
+                showMessage('success', 'Teacher Receipt generated successfully!');
+                
+                // Generate receipt data
+                const receiptNumber = 'RCP' + Math.floor(Math.random() * 90000 + 10000);
+                const currentDate = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const currentMonth = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long'
+                });
+                
+                // Calculate receipt amount based on salary
+                const salaryNum = parseInt(formData.salary.replace(/[^0-9]/g, ''));
+                const receiptAmount = '$' + (salaryNum * 0.8).toLocaleString();
+                
+                // Populate receipt data
+                document.getElementById('receipt-number').textContent = receiptNumber;
+                document.getElementById('receipt-date').textContent = currentDate;
+                document.getElementById('receipt-teacher-name').textContent = formData.fullName;
+                document.getElementById('receipt-institution').textContent = formData.institution;
+                document.getElementById('receipt-position').textContent = formData.position;
+                document.getElementById('receipt-department').textContent = formData.department;
+                document.getElementById('receipt-period').textContent = currentMonth;
+                document.getElementById('receipt-amount').textContent = receiptAmount;
+                
+                // Hide other documents and show receipt
+                document.getElementById('id-card').classList.remove('show');
+                document.getElementById('payslip-document').classList.remove('show');
+                document.getElementById('receipt-document').classList.add('show');
+                
+                // Scroll to the receipt
+                document.getElementById('receipt-document').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+            } catch (error) {
+                console.error('Error generating receipt:', error);
+                showMessage('error', 'Failed to generate receipt. Please try again.');
+            }
+        }
+
+        /**
+         * Generates a teacher payslip document
+         * @param {Object} formData - The form data object
+         */
+        function generatePayslip(formData) {
+            try {
+                showMessage('success', 'Teacher Payslip generated successfully!');
+                
+                // Generate payslip data
+                const payslipNumber = 'PAY' + Math.floor(Math.random() * 90000 + 10000);
+                const currentMonth = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long'
+                });
+                
+                // Calculate salary breakdown
+                const salaryNum = parseInt(formData.salary.replace(/[^0-9]/g, ''));
+                const basicSalary = '$' + Math.floor(salaryNum * 0.75).toLocaleString();
+                const allowances = '$' + Math.floor(salaryNum * 0.15).toLocaleString();
+                const deductions = '$' + Math.floor(salaryNum * 0.08).toLocaleString();
+                const netSalary = '$' + Math.floor(salaryNum * 0.82).toLocaleString();
+                
+                // Populate payslip data
+                document.getElementById('payslip-number').textContent = payslipNumber;
+                document.getElementById('payslip-period').textContent = currentMonth;
+                document.getElementById('payslip-teacher-name').textContent = formData.fullName;
+                document.getElementById('payslip-employee-id').textContent = formData.employeeId;
+                document.getElementById('payslip-institution').textContent = formData.institution;
+                document.getElementById('payslip-position').textContent = formData.position;
+                document.getElementById('payslip-department').textContent = formData.department;
+                document.getElementById('payslip-basic-salary').textContent = basicSalary;
+                document.getElementById('payslip-allowances').textContent = allowances;
+                document.getElementById('payslip-deductions').textContent = deductions;
+                document.getElementById('payslip-net-salary').textContent = netSalary;
+                
+                // Hide other documents and show payslip
+                document.getElementById('id-card').classList.remove('show');
+                document.getElementById('receipt-document').classList.remove('show');
+                document.getElementById('payslip-document').classList.add('show');
+                
+                // Scroll to the payslip
+                document.getElementById('payslip-document').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+            } catch (error) {
+                console.error('Error generating payslip:', error);
+                showMessage('error', 'Failed to generate payslip. Please try again.');
             }
         }
 
@@ -594,11 +883,16 @@
         }
 
         /**
-         * Downloads the ID card as JPG
+         * Downloads the document as JPG
          */
         function downloadJPG() {
-            const card = document.getElementById('id-card');
-            if (!card.classList.contains('show')) {
+            const idCard = document.getElementById('id-card');
+            const receipt = document.getElementById('receipt-document');
+            const payslip = document.getElementById('payslip-document');
+            
+            if (!idCard.classList.contains('show') && 
+                !receipt.classList.contains('show') && 
+                !payslip.classList.contains('show')) {
                 showMessage('error', 'Please generate a document first.');
                 return;
             }
@@ -611,8 +905,13 @@
          * Prints the document
          */
         function printDocument() {
-            const card = document.getElementById('id-card');
-            if (!card.classList.contains('show')) {
+            const idCard = document.getElementById('id-card');
+            const receipt = document.getElementById('receipt-document');
+            const payslip = document.getElementById('payslip-document');
+            
+            if (!idCard.classList.contains('show') && 
+                !receipt.classList.contains('show') && 
+                !payslip.classList.contains('show')) {
                 showMessage('error', 'Please generate a document first.');
                 return;
             }
@@ -651,8 +950,22 @@
             formData.employeeId = generateEmployeeId();
             formData.department = getRandomDepartment();
             
-            // Generate the ID card
-            generateIdCard(formData);
+            // Route to appropriate document generator
+            switch (formData.documentType) {
+                case 'teacher-receipt':
+                    generateReceipt(formData);
+                    break;
+                case 'teacher-payslip':
+                    generatePayslip(formData);
+                    break;
+                case 'teacher-id':
+                case 'student-id':
+                case 'employee-id':
+                case 'faculty-id':
+                default:
+                    generateIdCard(formData);
+                    break;
+            }
         });
 
         // Initialize the application
