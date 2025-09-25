@@ -38,11 +38,23 @@
                         <div class="form-group">
                             <label for="country">Country:</label>
                             <select id="country" name="country" required>
+                                <option value="">Select Country</option>
+                                <option value="India">India</option>
                                 <option value="USA">United States</option>
                                 <option value="UK">United Kingdom</option>
                                 <option value="Canada">Canada</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Singapore">Singapore</option>
+                                <option value="Philippines">Philippines</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="school">Select School:</label>
+                        <select id="school" name="school" required>
+                            <option value="">Please select a country first</option>
+                        </select>
                     </div>
 
                     <div class="form-row">
@@ -85,6 +97,12 @@
     <script>
         // Currency and tax configurations by country
         const countryConfig = {
+            'India': {
+                currency: '₹',
+                taxRate: 0.10,
+                providentFund: 0.12,
+                locale: 'en-IN'
+            },
             'USA': {
                 currency: '$',
                 taxRate: 0.22,
@@ -104,8 +122,174 @@
                 cpp: 0.0545,
                 ei: 0.0163,
                 locale: 'en-CA'
+            },
+            'Australia': {
+                currency: 'AUD $',
+                taxRate: 0.19,
+                superannuation: 0.11,
+                locale: 'en-AU'
+            },
+            'Singapore': {
+                currency: 'SGD $',
+                taxRate: 0.15,
+                cpf: 0.20,
+                locale: 'en-SG'
+            },
+            'Philippines': {
+                currency: '₱',
+                taxRate: 0.15,
+                sss: 0.045,
+                locale: 'en-PH'
             }
         };
+
+        // Comprehensive School Database from canva.py
+        const SCHOOLS_BY_COUNTRY = {
+            "India": [
+                "Delhi Public School, R.K. Puram, New Delhi",
+                "The Doon School, Dehradun",
+                "La Martiniere for Boys, Kolkata",
+                "Sanskriti School, New Delhi",
+                "Cathedral and John Connon School, Mumbai",
+                "Mayo College, Ajmer",
+                "Bishop Cotton School, Shimla",
+                "Welham Girls' School, Dehradun",
+                "Modern School, New Delhi",
+                "St. Xavier's Collegiate School, Kolkata",
+                "The Lawrence School, Sanawar",
+                "Rishi Valley School, Chittoor",
+                "Scindia School, Gwalior",
+                "Woodstock School, Mussoorie",
+                "St. Stephen's School, Chandigarh"
+            ],
+            "USA": [
+                "Lincoln Elementary School, New York",
+                "Groton School, Massachusetts",
+                "Phillips Exeter Academy, New Hampshire",
+                "The Lawrenceville School, New Jersey",
+                "Choate Rosemary Hall, Connecticut",
+                "Deerfield Academy, Massachusetts",
+                "The Hotchkiss School, Connecticut",
+                "Milton Academy, Massachusetts",
+                "St. Paul's School, New Hampshire",
+                "Andover Academy, Massachusetts",
+                "Cranbrook Schools, Michigan",
+                "The Thacher School, California",
+                "Middlesex School, Massachusetts",
+                "Cate School, California",
+                "St. Mark's School, Massachusetts"
+            ],
+            "UK": [
+                "Hillcrest Primary School, London",
+                "Eton College, Berkshire",
+                "Harrow School, London",
+                "Winchester College, Hampshire",
+                "Westminster School, London",
+                "Charterhouse School, Surrey",
+                "Rugby School, Warwickshire",
+                "Marlborough College, Wiltshire",
+                "Sherborne School, Dorset",
+                "Tonbridge School, Kent",
+                "Oundle School, Northamptonshire",
+                "Bradfield College, Berkshire",
+                "Radley College, Oxfordshire",
+                "Uppingham School, Rutland",
+                "Stowe School, Buckinghamshire"
+            ],
+            "Canada": [
+                "Upper Canada College, Toronto",
+                "St. George's School, Vancouver",
+                "Bishop's College School, Quebec",
+                "Ridley College, Ontario",
+                "Trinity College School, Ontario",
+                "Lakefield College School, Ontario",
+                "Appleby College, Ontario",
+                "Ashbury College, Ottawa",
+                "St. Andrew's College, Aurora",
+                "Brentwood College School, British Columbia",
+                "Shawnigan Lake School, British Columbia",
+                "Crescent School, Toronto",
+                "The Country Day School, Ontario",
+                "Royal St. George's College, Toronto",
+                "Havergal College, Toronto"
+            ],
+            "Australia": [
+                "Sydney Grammar School, New South Wales",
+                "Melbourne Grammar School, Victoria",
+                "Scotch College, Melbourne",
+                "The King's School, Parramatta",
+                "Geelong Grammar School, Victoria",
+                "Brisbane Grammar School, Queensland",
+                "Adelaide Hills School, South Australia",
+                "St Peter's College, Adelaide",
+                "Hale School, Perth",
+                "Christ Church Grammar School, Western Australia",
+                "Shore School, Sydney",
+                "Knox Grammar School, New South Wales",
+                "Trinity Grammar School, Melbourne",
+                "Barker College, New South Wales",
+                "Newington College, Sydney"
+            ],
+            "Singapore": [
+                "Raffles Institution, Singapore",
+                "Hwa Chong Institution, Singapore",
+                "National Junior College, Singapore",
+                "Victoria Junior College, Singapore",
+                "Anglo-Chinese School, Singapore",
+                "Singapore American School, Singapore",
+                "United World College, Singapore",
+                "Overseas Family School, Singapore",
+                "Canadian International School, Singapore",
+                "German European School, Singapore",
+                "Australian International School, Singapore",
+                "Chatsworth International School, Singapore",
+                "Tanglin Trust School, Singapore",
+                "NEXUS International School, Singapore",
+                "Stamford American International School, Singapore"
+            ],
+            "Philippines": [
+                "Ateneo de Manila University, Quezon City",
+                "De La Salle University, Manila",
+                "University of the Philippines, Diliman",
+                "Xavier School, San Juan",
+                "Immaculate Conception Academy, Greenhills",
+                "Miriam College, Quezon City",
+                "St. Scholastica's College, Manila",
+                "Assumption College, Makati",
+                "Philippine Science High School, Quezon City",
+                "International School Manila, Taguig",
+                "British School Manila, Taguig",
+                "Brent International School, Manila",
+                "Southville International School, Las Piñas",
+                "Faith Academy, Manila",
+                "Colegio San Agustin, Makati"
+            ]
+        };
+
+        // Function to populate schools based on selected country
+        function populateSchools(country) {
+            const schoolSelect = document.getElementById('school');
+            schoolSelect.innerHTML = '<option value="">Select a school</option>';
+            
+            if (country && SCHOOLS_BY_COUNTRY[country]) {
+                SCHOOLS_BY_COUNTRY[country].forEach(school => {
+                    const option = document.createElement('option');
+                    option.value = school;
+                    option.textContent = school;
+                    schoolSelect.appendChild(option);
+                });
+            } else {
+                schoolSelect.innerHTML = '<option value="">Please select a country first</option>';
+            }
+        }
+
+        // Function to extract school name and location
+        function parseSchool(schoolString) {
+            const parts = schoolString.split(', ');
+            const schoolName = parts[0];
+            const location = parts.slice(1).join(', ');
+            return { name: schoolName, location: location };
+        }
 
         // Initialize Faker for different locales
         function initializeFaker(country) {
@@ -123,7 +307,15 @@
 
         // Auto-generate realistic employee data
         function autoGenerateData() {
-            const country = document.getElementById('country').value;
+            // First select a random country if none selected
+            const countrySelect = document.getElementById('country');
+            if (!countrySelect.value) {
+                const countries = ['India', 'USA', 'UK', 'Canada', 'Australia', 'Singapore', 'Philippines'];
+                countrySelect.value = faker.random.arrayElement(countries);
+                populateSchools(countrySelect.value);
+            }
+            
+            const country = countrySelect.value;
             initializeFaker(country);
 
             // Generate realistic data
@@ -141,6 +333,12 @@
                 'HR Specialist', 'Financial Analyst', 'System Administrator', 'Project Manager'
             ]);
             document.getElementById('basic-salary').value = faker.datatype.number({min: 3000, max: 15000});
+            
+            // Select a random school
+            const schoolSelect = document.getElementById('school');
+            if (SCHOOLS_BY_COUNTRY[country] && SCHOOLS_BY_COUNTRY[country].length > 0) {
+                schoolSelect.value = faker.random.arrayElement(SCHOOLS_BY_COUNTRY[country]);
+            }
             
             // Set current month
             const currentDate = new Date();
@@ -162,7 +360,11 @@
             totalDeductions += incomeTax;
 
             // Country-specific deductions
-            if (country === 'USA') {
+            if (country === 'India') {
+                const providentFund = gross * config.providentFund;
+                deductions['Provident Fund'] = providentFund;
+                totalDeductions += providentFund;
+            } else if (country === 'USA') {
                 const socialSecurity = gross * config.socialSecurity;
                 const medicare = gross * config.medicare;
                 deductions['Social Security'] = socialSecurity;
@@ -178,6 +380,18 @@
                 deductions['CPP'] = cpp;
                 deductions['Employment Insurance'] = ei;
                 totalDeductions += cpp + ei;
+            } else if (country === 'Australia') {
+                const superannuation = gross * config.superannuation;
+                deductions['Superannuation'] = superannuation;
+                totalDeductions += superannuation;
+            } else if (country === 'Singapore') {
+                const cpf = gross * config.cpf;
+                deductions['CPF'] = cpf;
+                totalDeductions += cpf;
+            } else if (country === 'Philippines') {
+                const sss = gross * config.sss;
+                deductions['SSS'] = sss;
+                totalDeductions += sss;
             }
 
             const netSalary = gross - totalDeductions;
@@ -194,17 +408,32 @@
         // Format currency
         function formatCurrency(amount, country) {
             const config = countryConfig[country];
+            const currencyMap = {
+                'India': 'INR',
+                'USA': 'USD',
+                'UK': 'GBP',
+                'Canada': 'CAD',
+                'Australia': 'AUD',
+                'Singapore': 'SGD',
+                'Philippines': 'PHP'
+            };
+            
             return new Intl.NumberFormat(config.locale, {
                 style: 'currency',
-                currency: country === 'USA' ? 'USD' : country === 'UK' ? 'GBP' : 'CAD'
+                currency: currencyMap[country] || 'USD'
             }).format(amount);
         }
 
         // Generate professional payslip
         function generatePayslip(formData, photoUrl) {
             const country = formData.get('country');
+            const schoolString = formData.get('school');
             const basicSalary = formData.get('basic-salary');
             const salaryBreakdown = calculateSalary(basicSalary, country);
+            
+            // Parse school information
+            const school = parseSchool(schoolString);
+            const schoolInitials = school.name.split(' ').map(word => word[0]).join('').substring(0, 2).toUpperCase();
             
             const payPeriod = new Date(formData.get('pay-period') + '-01');
             const payPeriodStr = payPeriod.toLocaleDateString('en-US', { 
@@ -216,21 +445,21 @@
                 <div class="payslip-document">
                     <div class="company-header">
                         <div class="company-logo">
-                            <div class="logo-circle">TS</div>
+                            <div class="logo-circle">${schoolInitials}</div>
                         </div>
                         <div class="company-info">
-                            <h1>TECHSOFT SOLUTIONS PVT LTD</h1>
-                            <p>Excellence in Technology Solutions</p>
+                            <h1>${school.name.toUpperCase()}</h1>
+                            <p>Educational Excellence & Professional Development</p>
                             <div class="company-details">
-                                <p>1234 Technology Drive, Innovation District</p>
-                                <p>Phone: +1-555-TECH-SOL | Email: hr@techsoftsolutions.com</p>
+                                <p>${school.location}</p>
+                                <p>Education | Training | Professional Services</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="payslip-header">
-                        <h2>SALARY SLIP</h2>
-                        <div class="pay-period">Pay Period: ${payPeriodStr}</div>
+                        <h2>PAYSLIP / SALARY STATEMENT</h2>
+                        <div class="pay-period">Pay Period: ${payPeriodStr} | Employee ID: ${formData.get('employee-id')}</div>
                     </div>
 
                     <div class="employee-section">
@@ -337,6 +566,11 @@
             
             // Photo upload
             document.getElementById('photo').addEventListener('change', handlePhotoUpload);
+            
+            // Country selection to populate schools
+            document.getElementById('country').addEventListener('change', function(event) {
+                populateSchools(event.target.value);
+            });
             
             // Form submission
             document.getElementById('payslip-form').addEventListener('submit', function(event) {
