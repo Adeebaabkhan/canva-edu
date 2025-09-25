@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Document Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label, select, input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .preview {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .responsive {
+            max-width: 100%;
+            height: auto;
+        }
+        /* Add additional country-specific styles here */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Educational Document Generator</h1>
+    
+    <label for="country">Select Country:</label>
+    <select id="country">
+        <option value="usa">USA</option>
+        <option value="uk">UK</option>
+        <option value="canada">Canada</option>
+        <option value="australia">Australia</option>
+        <option value="india">India</option>
+        <option value="singapore">Singapore</option>
+        <option value="philippines">Philippines</option>
+    </select>
+
+    <label for="docType">Select Document Type:</label>
+    <select id="docType">
+        <option value="salary">Teacher Salary Receipt</option>
+        <option value="id">Teacher ID Card</option>
+        <option value="acceptance">Acceptance Letter</option>
+        <option value="certificate">Professional Certificate</option>
+    </select>
+
+    <label for="name">Teacher's Name:</label>
+    <input type="text" id="name" placeholder="Enter teacher's name" required>
+
+    <label for="salary">Salary:</label>
+    <input type="number" id="salary" placeholder="Enter salary" required>
+
+    <label for="photo">Upload Photo (use placeholder):</label>
+    <input type="url" id="photo" placeholder="Enter placeholder URL" value="https://via.placeholder.com/150">
+
+    <button id="generate">Generate Preview</button>
+
+    <div class="preview" id="preview">
+        <h2>Document Preview</h2>
+        <div id="documentContent"></div>
+    </div>
+
+    <button id="download" style="display:none;">Download as JPG</button>
+    <button id="print" style="display:none;">Print Document</button>
+</div>
+
+<script>
+    document.getElementById('generate').addEventListener('click', function() {
+        const country = document.getElementById('country').value;
+        const name = document.getElementById('name').value;
+        const salary = document.getElementById('salary').value;
+        const photo = document.getElementById('photo').value;
+        const docType = document.getElementById('docType').value;
+
+        let documentContent = `<h3>${docType.replace(/([A-Z])/g, ' $1')}</h3>` +
+                               `<img src="${photo}" alt="Teacher Photo" class="responsive">` +
+                               `<p>Name: ${name}</p>` +
+                               `<p>Salary: ${salary}</p>`;
+        
+        document.getElementById('documentContent').innerHTML = documentContent;
+        document.getElementById('preview').style.display = 'block';
+        document.getElementById('download').style.display = 'inline-block';
+        document.getElementById('print').style.display = 'inline-block';
+    });
+
+    document.getElementById('download').addEventListener('click', function() {
+        alert('Download functionality not implemented yet.');
+    });
+
+    document.getElementById('print').addEventListener('click', function() {
+        window.print();
+    });
+</script>
+
+</body>
+</html>
