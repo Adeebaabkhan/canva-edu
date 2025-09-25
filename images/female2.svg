@@ -1,0 +1,8 @@
+<svg width="120" height="150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="150" fill="#e8f5e8"/>
+  <circle cx="60" cy="50" r="25" fill="#4caf50"/>
+  <rect x="40" y="75" width="40" height="50" fill="#4caf50"/>
+  <rect x="35" y="25" width="50" height="30" fill="#8d6e63" rx="25"/>
+  <text x="60" y="140" text-anchor="middle" font-family="Arial" font-size="10" fill="#333">Female 2</text>
+  <text x="60" y="130" text-anchor="middle" font-family="Arial" font-size="8" fill="#666">Brown Hair</text>
+</svg>

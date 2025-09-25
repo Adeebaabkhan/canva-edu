@@ -1,0 +1,8 @@
+<svg width="120" height="150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="150" fill="#f0f8ff"/>
+  <circle cx="60" cy="50" r="25" fill="#5ba3d4"/>
+  <rect x="40" y="75" width="40" height="50" fill="#5ba3d4"/>
+  <ellipse cx="60" cy="30" rx="15" ry="10" fill="#ddd"/>
+  <text x="60" y="140" text-anchor="middle" font-family="Arial" font-size="10" fill="#333">Male 2</text>
+  <text x="60" y="130" text-anchor="middle" font-family="Arial" font-size="8" fill="#666">Receding</text>
+</svg>

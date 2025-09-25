@@ -3,34 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Canva Edu</title>
+    <title>ID Card Generator - Canva Edu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .id-card {
+            width: 350px;
+            height: 220px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin: 20px auto;
+            position: relative;
+            display: none;
+        }
+        
+        .id-card.show {
+            display: block;
+        }
+        
+        .card-header {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .card-content {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .photo-section {
+            flex-shrink: 0;
+        }
+        
+        .photo-section img {
+            width: 120px;
+            height: 150px;
+            border-radius: 8px;
+            border: 3px solid white;
+            object-fit: cover;
+            background-color: white;
+        }
+        
+        .info-section {
+            flex: 1;
+            padding-top: 10px;
+        }
+        
+        .info-row {
+            margin-bottom: 12px;
+        }
+        
+        .info-label {
+            font-size: 10px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to My Canva Edu</h1>
-    <div id="photo-container">
-        <img id="photo" src="https://example.com/photo.jpg" alt="A photo" onerror="handlePhotoError()">
+    <h1>ID Card Generator</h1>
+    
+    <div class="form-container">
+        <h2>Enter Your Information</h2>
+        <form id="id-form">
+            <div class="form-group">
+                <label for="full-name">Full Name:</label>
+                <input type="text" id="full-name" name="full-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="employee-id">Employee ID:</label>
+                <input type="text" id="employee-id" name="employee-id" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="position" required>
+            </div>
+            
+            <button type="submit">Generate ID Card</button>
+        </form>
+        
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
     </div>
-    <script>
-        const photoElement = document.getElementById('photo');
-        const fallbackImages = [
-            'https://fallback1.com/photo.jpg',
-            'https://fallback2.com/photo.jpg',
-            'https://fallback3.com/photo.jpg'
-        ];
+    
+    <div id="id-card" class="id-card">
+        <div class="card-header">Employee Identification Card</div>
+        <div class="card-content">
+            <div class="photo-section">
+                <img id="employee-photo" src="" alt="Employee Photo" onerror="handlePhotoError(this)">
+            </div>
+            <div class="info-section">
+                <div class="info-row">
+                    <div class="info-label">Name</div>
+                    <div class="info-value" id="card-name"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">ID</div>
+                    <div class="info-value" id="card-id"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Department</div>
+                    <div class="info-value" id="card-department"></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Position</div>
+                    <div class="info-value" id="card-position"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function handlePhotoError() {
-            console.error('Error loading photo.');
-            for (let i = 0; i < fallbackImages.length; i++) {
-                photoElement.src = fallbackImages[i];
-                photoElement.onload = () => { return; };
-                photoElement.onerror = () => { 
-                    if (i === fallbackImages.length - 1) {
-                        photoElement.src = '';
-                        alert('All images failed to load.');
-                    }
-                };
+    <script>
+        // Local photo assets organized by gender
+        const localPhotos = {
+            male: [
+                'images/male1.svg',
+                'images/male2.svg', 
+                'images/male3.svg',
+                'images/male4.svg'
+            ],
+            female: [
+                'images/female1.svg',
+                'images/female2.svg'
+            ]
+        };
+
+        // Common male and female names for gender detection
+        const genderNames = {
+            male: [
+                'james', 'john', 'robert', 'michael', 'william', 'david', 'richard', 'joseph', 'thomas', 'christopher',
+                'charles', 'daniel', 'matthew', 'anthony', 'mark', 'donald', 'steven', 'paul', 'andrew', 'joshua',
+                'kenneth', 'kevin', 'brian', 'george', 'edward', 'ronald', 'timothy', 'jason', 'jeffrey', 'ryan',
+                'jacob', 'gary', 'nicholas', 'eric', 'jonathan', 'stephen', 'larry', 'justin', 'scott', 'brandon',
+                'benjamin', 'samuel', 'gregory', 'alexander', 'patrick', 'frank', 'raymond', 'jack', 'dennis', 'jerry'
+            ],
+            female: [
+                'mary', 'patricia', 'jennifer', 'linda', 'elizabeth', 'barbara', 'susan', 'jessica', 'sarah', 'karen',
+                'nancy', 'lisa', 'betty', 'helen', 'sandra', 'donna', 'carol', 'ruth', 'sharon', 'michelle',
+                'laura', 'sarah', 'kimberly', 'deborah', 'dorothy', 'lisa', 'nancy', 'karen', 'betty', 'helen',
+                'sandra', 'donna', 'carol', 'ruth', 'sharon', 'michelle', 'laura', 'sarah', 'kimberly', 'deborah',
+                'amy', 'angela', 'brenda', 'emma', 'olivia', 'cynthia', 'marie', 'janet', 'catherine', 'frances'
+            ]
+        };
+
+        /**
+         * Detects gender based on first name using common name lists
+         * @param {string} fullName - The full name to analyze
+         * @returns {string} - 'male', 'female', or 'unknown'
+         */
+        function detectGender(fullName) {
+            if (!fullName) return 'unknown';
+            
+            const firstName = fullName.trim().split(' ')[0].toLowerCase();
+            
+            if (genderNames.male.includes(firstName)) {
+                return 'male';
+            } else if (genderNames.female.includes(firstName)) {
+                return 'female';
+            }
+            
+            return 'unknown';
+        }
+
+        /**
+         * Gets a random photo based on detected gender from local assets
+         * @param {string} fullName - The full name to detect gender from
+         * @returns {string} - Path to local image file
+         */
+        function getRandomPhoto(fullName) {
+            try {
+                const detectedGender = detectGender(fullName);
+                let photoArray;
+                
+                if (detectedGender === 'male') {
+                    photoArray = localPhotos.male;
+                } else if (detectedGender === 'female') {
+                    photoArray = localPhotos.female;
+                } else {
+                    // Unknown gender - randomly pick from all photos
+                    photoArray = [...localPhotos.male, ...localPhotos.female];
+                }
+                
+                // Select random photo from appropriate array
+                const randomIndex = Math.floor(Math.random() * photoArray.length);
+                return photoArray[randomIndex];
+                
+            } catch (error) {
+                console.error('Error in getRandomPhoto:', error);
+                // Fallback to first male photo if error occurs
+                return localPhotos.male[0];
             }
         }
+
+        /**
+         * Handles photo loading errors with fallback logic
+         * @param {HTMLImageElement} imgElement - The image element that failed to load
+         */
+        function handlePhotoError(imgElement) {
+            console.error('Error loading photo:', imgElement.src);
+            
+            // Try fallback photos from both genders
+            const allPhotos = [...localPhotos.male, ...localPhotos.female];
+            const currentSrc = imgElement.src;
+            const currentIndex = allPhotos.findIndex(photo => currentSrc.includes(photo));
+            
+            // Try next photo in the list
+            if (currentIndex !== -1 && currentIndex < allPhotos.length - 1) {
+                imgElement.src = allPhotos[currentIndex + 1];
+            } else if (currentIndex === -1) {
+                // If current source not found in our list, try first photo
+                imgElement.src = allPhotos[0];
+            } else {
+                // All photos failed, show error
+                imgElement.alt = 'Photo unavailable';
+                imgElement.style.backgroundColor = '#f0f0f0';
+                imgElement.style.display = 'flex';
+                imgElement.style.alignItems = 'center';
+                imgElement.style.justifyContent = 'center';
+                console.error('All local photos failed to load');
+            }
+        }
+
+        /**
+         * Generates the ID card with provided information
+         * @param {Object} formData - The form data object
+         */
+        function generateIdCard(formData) {
+            try {
+                // Show success message
+                showMessage('success', 'ID Card generated successfully!');
+                
+                // Get random photo based on name
+                const photoPath = getRandomPhoto(formData.fullName);
+                
+                // Populate card data
+                document.getElementById('card-name').textContent = formData.fullName;
+                document.getElementById('card-id').textContent = formData.employeeId;
+                document.getElementById('card-department').textContent = formData.department;
+                document.getElementById('card-position').textContent = formData.position;
+                
+                // Set photo with error handling
+                const photoElement = document.getElementById('employee-photo');
+                photoElement.src = photoPath;
+                
+                // Show the ID card
+                document.getElementById('id-card').classList.add('show');
+                
+                // Scroll to the card
+                document.getElementById('id-card').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+            } catch (error) {
+                console.error('Error generating ID card:', error);
+                showMessage('error', 'Failed to generate ID card. Please try again.');
+            }
+        }
+
+        /**
+         * Shows success or error messages
+         * @param {string} type - 'success' or 'error'
+         * @param {string} message - The message to display
+         */
+        function showMessage(type, message) {
+            const errorMsg = document.getElementById('error-message');
+            const successMsg = document.getElementById('success-message');
+            
+            // Hide both messages first
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            if (type === 'error') {
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+            } else if (type === 'success') {
+                successMsg.textContent = message;
+                successMsg.style.display = 'block';
+            }
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Form submission handler
+        document.getElementById('id-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                fullName: document.getElementById('full-name').value.trim(),
+                employeeId: document.getElementById('employee-id').value.trim(),
+                department: document.getElementById('department').value.trim(),
+                position: document.getElementById('position').value.trim()
+            };
+            
+            // Validate form data
+            if (!formData.fullName || !formData.employeeId || !formData.department || !formData.position) {
+                showMessage('error', 'Please fill in all required fields.');
+                return;
+            }
+            
+            // Generate the ID card
+            generateIdCard(formData);
+        });
+
+        // Initialize the application
+        console.log('ID Card Generator initialized');
+        console.log('Local photos available:', Object.keys(localPhotos).map(gender => 
+            `${gender}: ${localPhotos[gender].length} photos`
+        ).join(', '));
     </script>
 </body>
 </html>
