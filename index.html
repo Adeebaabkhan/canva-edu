@@ -3,113 +3,764 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educational Document Generator</title>
+    <title>Professional Educational Document Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/faker@5.5.3/dist/faker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background-color: #f4f4f4;
         }
+
         .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-        h1 {
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
             text-align: center;
         }
-        label, select, input {
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
             display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 1rem;
+        }
+
+        .form-group select,
+        .form-group input {
             width: 100%;
-            margin: 10px 0;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
         }
-        .preview {
-            border: 1px solid #ccc;
-            padding: 10px;
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-group {
+            grid-column: span 2;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
             margin-top: 20px;
+        }
+
+        .preview-section {
             display: none;
+            background: #f9fafb;
+            padding: 40px;
+            border-top: 1px solid #e5e7eb;
         }
-        .responsive {
-            max-width: 100%;
-            height: auto;
+
+        /* Professional Document Styles */
+        .document {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        /* Add additional country-specific styles here */
+
+        .doc-header {
+            background: #2563eb;
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+
+        .doc-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .doc-header .location {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .doc-content {
+            padding: 30px;
+        }
+
+        .doc-title {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .pay-period {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .pay-period-left {
+            color: #059669;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .employee-id {
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .employee-details {
+            border: 2px solid #2563eb;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #374151;
+            min-width: 150px;
+        }
+
+        .detail-value {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .salary-highlight {
+            color: #059669;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .company-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .company-info h3 {
+            color: #2563eb;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .footer-notice {
+            background: #f3f4f6;
+            padding: 15px;
+            margin-top: 30px;
+            color: #059669;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .document-footer {
+            padding: 20px 30px;
+            background: #f8fafc;
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Teacher ID Card Styles */
+        .id-card {
+            background: white;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .id-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .id-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin: 20px auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .id-details {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .id-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .id-position {
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        /* Certificate Styles */
+        .certificate {
+            background: linear-gradient(45deg, #fef7cd 0%, #fef3c7 100%);
+            border: 8px solid #d97706;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #d97706;
+            border-radius: 10px;
+        }
+
+        .cert-title {
+            font-size: 2.5rem;
+            color: #d97706;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cert-text {
+            font-size: 1.3rem;
+            color: #92400e;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .cert-signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .signature {
+            text-align: center;
+        }
+
+        .signature-line {
+            border-top: 2px solid #d97706;
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-section {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .btn-group {
+                grid-column: span 1;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Professional Document Generator</h1>
+            <p>Create authentic educational and employment documents</p>
+        </div>
 
-<div class="container">
-    <h1>Educational Document Generator</h1>
-    
-    <label for="country">Select Country:</label>
-    <select id="country">
-        <option value="usa">USA</option>
-        <option value="uk">UK</option>
-        <option value="canada">Canada</option>
-        <option value="australia">Australia</option>
-        <option value="india">India</option>
-        <option value="singapore">Singapore</option>
-        <option value="philippines">Philippines</option>
-    </select>
+        <div class="form-section">
+            <div class="form-group">
+                <label for="country">🌍 Select Country</label>
+                <select id="country">
+                    <option value="usa">🇺🇸 United States</option>
+                    <option value="uk">🇬🇧 United Kingdom</option>
+                    <option value="canada">🇨🇦 Canada</option>
+                    <option value="australia">🇦🇺 Australia</option>
+                    <option value="india">🇮🇳 India</option>
+                    <option value="singapore">🇸🇬 Singapore</option>
+                    <option value="philippines">🇵🇭 Philippines</option>
+                </select>
+            </div>
 
-    <label for="docType">Select Document Type:</label>
-    <select id="docType">
-        <option value="salary">Teacher Salary Receipt</option>
-        <option value="id">Teacher ID Card</option>
-        <option value="acceptance">Acceptance Letter</option>
-        <option value="certificate">Professional Certificate</option>
-    </select>
+            <div class="form-group">
+                <label for="docType">📄 Document Type</label>
+                <select id="docType">
+                    <option value="salary">💰 Salary Statement</option>
+                    <option value="id">🆔 Teacher ID Card</option>
+                    <option value="certificate">🏆 Professional Certificate</option>
+                    <option value="acceptance">📜 Acceptance Letter</option>
+                </select>
+            </div>
 
-    <label for="name">Teacher's Name:</label>
-    <input type="text" id="name" placeholder="Enter teacher's name" required>
+            <div class="form-group">
+                <label for="name">👤 Name (or Auto-Generate)</label>
+                <input type="text" id="name" placeholder="Leave empty for auto-generation">
+            </div>
 
-    <label for="salary">Salary:</label>
-    <input type="number" id="salary" placeholder="Enter salary" required>
+            <div class="form-group">
+                <label for="institution">🏫 Institution (or Auto-Select)</label>
+                <input type="text" id="institution" placeholder="Leave empty for auto-selection">
+            </div>
 
-    <label for="photo">Upload Photo (use placeholder):</label>
-    <input type="url" id="photo" placeholder="Enter placeholder URL" value="https://via.placeholder.com/150">
+            <div class="form-group">
+                <label for="position">💼 Position</label>
+                <select id="position">
+                    <option value="teacher">Teacher</option>
+                    <option value="professor">Professor</option>
+                    <option value="admin">Administrative Assistant</option>
+                    <option value="coordinator">Academic Coordinator</option>
+                    <option value="principal">Principal</option>
+                    <option value="lecturer">Lecturer</option>
+                </select>
+            </div>
 
-    <button id="generate">Generate Preview</button>
+            <div class="form-group">
+                <label for="salary">💵 Salary (or Auto-Generate)</label>
+                <input type="number" id="salary" placeholder="Leave empty for realistic amount">
+            </div>
 
-    <div class="preview" id="preview">
-        <h2>Document Preview</h2>
-        <div id="documentContent"></div>
+            <div class="btn-group">
+                <button class="btn" id="generate">🚀 Generate Document</button>
+                <button class="btn" id="download" style="display:none;">📥 Download JPG</button>
+                <button class="btn" id="print" style="display:none;">🖨️ Print</button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Generating realistic document...</p>
+        </div>
+
+        <div class="preview-section" id="preview">
+            <div id="documentContent"></div>
+        </div>
     </div>
 
-    <button id="download" style="display:none;">Download as JPG</button>
-    <button id="print" style="display:none;">Print Document</button>
-</div>
+    <script>
+        // Country-specific data
+        const countryData = {
+            usa: {
+                currency: '$',
+                institutions: ['Harvard University', 'Stanford University', 'MIT', 'Yale University', 'Princeton University', 'Columbia University', 'University of Pennsylvania', 'Caltech', 'Duke University', 'Northwestern University', 'Johns Hopkins University', 'University of Chicago', 'Cornell University', 'Rice University', 'Vanderbilt University', 'Washington University in St. Louis', 'UCLA', 'UC Berkeley', 'Carnegie Mellon University', 'University of Virginia'],
+                salaryRange: [45000, 85000],
+                companies: ['Academic Solutions Inc', 'EduTech Partners', 'Learning Dynamics Corp', 'Educational Excellence Ltd', 'Knowledge Systems Inc']
+            },
+            uk: {
+                currency: '£',
+                institutions: ['Oxford University', 'Cambridge University', 'Imperial College London', 'UCL', 'Edinburgh University', 'Manchester University', 'King\'s College London', 'LSE', 'Warwick University', 'Bristol University', 'Glasgow University', 'Birmingham University', 'Sheffield University', 'Nottingham University', 'Southampton University', 'Leeds University', 'York University', 'Lancaster University', 'Bath University', 'St Andrews University'],
+                salaryRange: [28000, 55000],
+                companies: ['British Education Partners', 'Academic Services UK', 'Learning Solutions Ltd', 'Educational Development Corp', 'Teaching Excellence Group']
+            },
+            canada: {
+                currency: 'C$',
+                institutions: ['University of Toronto', 'McGill University', 'UBC', 'University of Alberta', 'McMaster University', 'University of Montreal', 'University of Waterloo', 'Western University', 'Queen\'s University', 'University of Calgary', 'Simon Fraser University', 'University of Ottawa', 'Dalhousie University', 'University of Manitoba', 'Carleton University', 'York University', 'Concordia University', 'University of Saskatchewan', 'Memorial University', 'University of Victoria'],
+                salaryRange: [48000, 78000],
+                companies: ['Canadian Education Services', 'Maple Leaf Academic Group', 'Northern Learning Systems', 'Educational Partners Canada', 'Academic Excellence Corp']
+            },
+            australia: {
+                currency: 'A$',
+                institutions: ['University of Melbourne', 'Australian National University', 'University of Sydney', 'University of Queensland', 'Monash University', 'UNSW Sydney', 'University of Western Australia', 'University of Adelaide', 'University of Technology Sydney', 'Macquarie University', 'Queensland University of Technology', 'Curtin University', 'Deakin University', 'Griffith University', 'RMIT University', 'University of Newcastle', 'Flinders University', 'La Trobe University', 'University of Wollongong', 'Western Sydney University'],
+                salaryRange: [55000, 90000],
+                companies: ['Australian Academic Services', 'Southern Education Group', 'Pacific Learning Solutions', 'Educational Development Australia', 'Academic Partners Pty Ltd']
+            },
+            india: {
+                currency: '₹',
+                institutions: ['IIT Delhi', 'IISc Bangalore', 'IIT Bombay', 'IIT Madras', 'IIT Kanpur', 'IIT Kharagpur', 'JNU', 'University of Delhi', 'Jawaharlal Nehru University', 'Banaras Hindu University', 'Jamia Millia Islamia', 'Aligarh Muslim University', 'University of Calcutta', 'University of Mumbai', 'Anna University', 'Osmania University', 'Pune University', 'Jadavpur University', 'Hyderabad University', 'BITS Pilani', 'VIT University', 'SRM University', 'Manipal University', 'Amity University', 'Lovely Professional University', 'Chandigarh University', 'Thapar University', 'KIIT University', 'Kalinga University', 'Sharda University'],
+                salaryRange: [300000, 800000],
+                companies: ['TechSoft Solutions Pvt Ltd', 'EduTech India Pvt Ltd', 'Academic Services India', 'Learning Solutions Pvt Ltd', 'Educational Excellence India']
+            },
+            singapore: {
+                currency: 'S$',
+                institutions: ['National University of Singapore', 'Nanyang Technological University', 'Singapore Management University', 'Singapore University of Technology and Design', 'Singapore Institute of Technology', 'Singapore University of Social Sciences', 'LASALLE College of the Arts', 'Nanyang Academy of Fine Arts', 'Singapore Polytechnic', 'Ngee Ann Polytechnic', 'Temasek Polytechnic', 'Republic Polytechnic', 'Singapore Institute of Management', 'PSB Academy', 'Kaplan Singapore', 'MDIS Singapore', 'EASB Singapore', 'TMC Academy', 'Raffles College', 'James Cook University Singapore'],
+                salaryRange: [45000, 75000],
+                companies: ['Singapore Education Services', 'Asia Pacific Learning Group', 'Educational Solutions Singapore', 'Academic Partners Singapore', 'Learning Excellence Pte Ltd']
+            },
+            philippines: {
+                currency: '₱',
+                institutions: ['University of the Philippines Diliman', 'Ateneo de Manila University', 'De La Salle University', 'University of Santo Tomas', 'Far Eastern University', 'Polytechnic University of the Philippines', 'Technological University of the Philippines', 'Philippine Normal University', 'Miriam College', 'San Beda University', 'Adamson University', 'University of the East', 'Centro Escolar University', 'Lyceum of the Philippines University', 'Mapua University', 'Saint Louis University', 'University of San Carlos', 'Silliman University', 'Xavier University', 'Mindanao State University'],
+                salaryRange: [250000, 600000],
+                companies: ['Philippine Education Services Inc', 'Academic Solutions Philippines', 'Learning Partners Corp', 'Educational Development Inc', 'Teaching Excellence Group Philippines']
+            }
+        };
 
-<script>
-    document.getElementById('generate').addEventListener('click', function() {
-        const country = document.getElementById('country').value;
-        const name = document.getElementById('name').value;
-        const salary = document.getElementById('salary').value;
-        const photo = document.getElementById('photo').value;
-        const docType = document.getElementById('docType').value;
+        // Auto-generate realistic photo
+        async function getRandomPhoto() {
+            return 'https://this-person-does-not-exist.com/en?' + Math.random();
+        }
 
-        let documentContent = `<h3>${docType.replace(/([A-Z])/g, ' $1')}</h3>` +
-                               `<img src="${photo}" alt="Teacher Photo" class="responsive">` +
-                               `<p>Name: ${name}</p>` +
-                               `<p>Salary: ${salary}</p>`;
-        
-        document.getElementById('documentContent').innerHTML = documentContent;
-        document.getElementById('preview').style.display = 'block';
-        document.getElementById('download').style.display = 'inline-block';
-        document.getElementById('print').style.display = 'inline-block';
-    });
+        // Generate employee ID
+        function generateEmployeeId() {
+            const prefix = 'EMP';
+            const number = Math.floor(Math.random() * 90000) + 10000;
+            return prefix + number;
+        }
 
-    document.getElementById('download').addEventListener('click', function() {
-        alert('Download functionality not implemented yet.');
-    });
+        // Generate realistic data
+        function generateRealisticData(country) {
+            const data = countryData[country];
+            const name = faker.name.findName();
+            const institution = data.institutions[Math.floor(Math.random() * data.institutions.length)];
+            const company = data.companies[Math.floor(Math.random() * data.companies.length)];
+            const salary = Math.floor(Math.random() * (data.salaryRange[1] - data.salaryRange[0]) + data.salaryRange[0]);
+            const department = faker.random.arrayElement(['Academic Affairs', 'Student Services', 'Administration', 'Research & Development', 'Corporate Communications', 'Human Resources']);
+            
+            return {
+                name,
+                institution,
+                company,
+                salary,
+                department,
+                currency: data.currency,
+                employeeId: generateEmployeeId(),
+                phone: faker.phone.phoneNumber(),
+                email: faker.internet.email().toLowerCase(),
+                address: faker.address.streetAddress() + ', ' + faker.address.city(),
+                date: new Date().toLocaleDateString()
+            };
+        }
 
-    document.getElementById('print').addEventListener('click', function() {
-        window.print();
-    });
-</script>
+        // Generate salary statement (like the image you showed)
+        function generateSalaryStatement(data) {
+            const monthlySalary = Math.floor(data.salary / 12);
+            const annualSalary = data.salary;
+            
+            return `
+                <div class="document">
+                    <div class="doc-header">
+                        <h2>${data.company.toUpperCase()}</h2>
+                        <div class="location">${faker.address.city()}</div>
+                    </div>
+                    <div class="doc-content">
+                        <h3 class="doc-title">PAYSLIP / SALARY STATEMENT</h3>
+                        
+                        <div class="pay-period">
+                            <div class="pay-period-left">PAY PERIOD: ${new Date().toLocaleDateString()}</div>
+                            <div class="employee-id">Employee ID: ${data.employeeId}</div>
+                        </div>
 
+                        <div class="employee-details">
+                            <div class="detail-row">
+                                <div class="detail-label">EMPLOYEE NAME:</div>
+                                <div class="detail-value">${data.name}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">POSITION:</div>
+                                <div class="detail-value">${document.getElementById('position').selectedOptions[0].text}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">DEPARTMENT:</div>
+                                <div class="detail-value">${data.department}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">COMPANY:</div>
+                                <div class="detail-value">${data.company}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">MONTHLY SALARY:</div>
+                                <div class="detail-value salary-highlight">${data.currency}${monthlySalary.toLocaleString()}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">ANNUAL SALARY:</div>
+                                <div class="detail-value">${data.currency}${annualSalary.toLocaleString()}</div>
+                            </div>
+                        </div>
+
+                        <div class="company-info">
+                            <h3>COMPANY CONTACT INFORMATION</h3>
+                            <div class="contact-info">
+                                Phone: ${data.phone}<br>
+                                Email: ${data.email}<br>
+                                Industry: Education & Technology
+                            </div>
+                        </div>
+
+                        <div class="footer-notice">
+                            FOR EMPLOYMENT VERIFICATION PURPOSES ONLY - CONFIDENTIAL DOCUMENT
+                        </div>
+                    </div>
+                    <div class="document-footer">
+                        ${data.company} | ${faker.address.city()} | Employee Documentation
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate Teacher ID Card
+        async function generateIdCard(data) {
+            const photo = await getRandomPhoto();
+            return `
+                <div class="id-card">
+                    <div class="id-header">
+                        <h3>${data.institution}</h3>
+                        <p>Faculty Identification</p>
+                    </div>
+                    <img src="${photo}" alt="Teacher Photo" class="id-photo">
+                    <div class="id-details">
+                        <div class="id-name">${data.name}</div>
+                        <div class="id-position">${document.getElementById('position').selectedOptions[0].text}</div>
+                        <p><strong>ID:</strong> ${data.employeeId}</p>
+                        <p><strong>Department:</strong> ${data.department}</p>
+                        <p><strong>Valid Until:</strong> ${new Date(Date.now() + 365*24*60*60*1000).toLocaleDateString()}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate Certificate
+        function generateCertificate(data) {
+            return `
+                <div class="certificate">
+                    <h2 class="cert-title">Certificate of Excellence</h2>
+                    <div class="cert-text">
+                        This is to certify that<br>
+                        <strong style="font-size: 1.8rem; color: #d97706;">${data.name}</strong><br>
+                        has been recognized for outstanding performance as<br>
+                        <strong>${document.getElementById('position').selectedOptions[0].text}</strong><br>
+                        at ${data.institution}
+                    </div>
+                    <div class="cert-signature">
+                        <div class="signature">
+                            <div class="signature-line"></div>
+                            <p><strong>Director</strong></p>
+                            <p>${data.institution}</p>
+                        </div>
+                        <div class="signature">
+                            <div class="signature-line"></div>
+                            <p><strong>Date</strong></p>
+                            <p>${data.date}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate Acceptance Letter
+        function generateAcceptanceLetter(data) {
+            return `
+                <div class="document">
+                    <div class="doc-header">
+                        <h2>${data.institution}</h2>
+                        <div class="location">${data.address}</div>
+                    </div>
+                    <div class="doc-content">
+                        <h3 class="doc-title">LETTER OF ACCEPTANCE</h3>
+                        
+                        <p style="margin: 20px 0;"><strong>Date:</strong> ${data.date}</p>
+                        
+                        <p style="margin: 20px 0;">Dear ${data.name},</p>
+                        
+                        <p style="line-height: 1.6; margin: 20px 0;">
+                            We are pleased to inform you that your application for the position of 
+                            <strong>${document.getElementById('position').selectedOptions[0].text}</strong> 
+                            at ${data.institution} has been accepted.
+                        </p>
+                        
+                        <p style="line-height: 1.6; margin: 20px 0;">
+                            Your employment will commence on ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()} 
+                            with an annual salary of <strong>${data.currency}${data.salary.toLocaleString()}</strong>.
+                        </p>
+                        
+                        <p style="line-height: 1.6; margin: 20px 0;">
+                            We look forward to your valuable contributions to our institution.
+                        </p>
+                        
+                        <div style="margin-top: 50px;">
+                            <p><strong>Sincerely,</strong></p>
+                            <p style="margin-top: 30px;"><strong>Dr. ${faker.name.findName()}</strong></p>
+                            <p>Human Resources Director</p>
+                            <p>${data.institution}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Main generation function
+        document.getElementById('generate').addEventListener('click', async function() {
+            const country = document.getElementById('country').value;
+            const docType = document.getElementById('docType').value;
+            const customName = document.getElementById('name').value;
+            const customInstitution = document.getElementById('institution').value;
+            const customSalary = document.getElementById('salary').value;
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            
+            // Generate realistic data
+            const data = generateRealisticData(country);
+            
+            // Override with custom values if provided
+            if (customName) data.name = customName;
+            if (customInstitution) data.institution = customInstitution;
+            if (customSalary) data.salary = parseInt(customSalary);
+
+            let documentContent = '';
+
+            try {
+                switch(docType) {
+                    case 'salary':
+                        documentContent = generateSalaryStatement(data);
+                        break;
+                    case 'id':
+                        documentContent = await generateIdCard(data);
+                        break;
+                    case 'certificate':
+                        documentContent = generateCertificate(data);
+                        break;
+                    case 'acceptance':
+                        documentContent = generateAcceptanceLetter(data);
+                        break;
+                }
+
+                document.getElementById('documentContent').innerHTML = documentContent;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('preview').style.display = 'block';
+                document.getElementById('download').style.display = 'inline-block';
+                document.getElementById('print').style.display = 'inline-block';
+                
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                alert('Error generating document. Please try again.');
+            }
+        });
+
+        // Download functionality
+        document.getElementById('download').addEventListener('click', function() {
+            const element = document.getElementById('documentContent');
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'document.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        });
+
+        // Print functionality
+        document.getElementById('print').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
 </body>
 </html>
