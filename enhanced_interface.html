@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Document Generator - Professional Education Documents</title>
+    <link rel=\"stylesheet\" href=\"styles.css\">
+    <style>
+        /* Enhanced UI Styles */
+        .enhanced-features {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .document-type-selector {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .doc-type-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            text-align: center;
+        }
+        
+        .doc-type-card:hover, .doc-type-card.active {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .doc-type-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .security-features {
+            background: #f8f9fa;
+            border-left: 5px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-ready { background-color: #28a745; }
+        .status-processing { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        
+        .document-preview {
+            border: 2px dashed #dee2e6;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 10px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .preview-active {
+            border-color: #28a745;
+            background-color: #f8fff8;
+        }
+        
+        .enhanced-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+        
+        .progress-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .progress-bar {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .api-status {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 5px;
+            padding: 0.5rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1>🚀 Enhanced Document Generator</h1>
+            <p class="subtitle">Professional Education Documents with Advanced Security Features</p>
+        </header>
+
+        <!-- Enhanced Features Banner -->
+        <div class="enhanced-features">
+            <h2>🔒 New Enhanced Features</h2>
+            <p>✅ Multi-layer Security • ✅ QR Code Verification • ✅ Country-specific Compliance • ✅ Professional Design</p>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="doc-type-icon">🎓</div>
+                    <h4>Teacher Documents</h4>
+                    <p>ID Cards & Salary Slips</p>
+                </div>
+                <div class="feature-item">
+                    <div class="doc-type-icon">📚</div>
+                    <h4>Student Documents</h4>
+                    <p>ID Cards, Transcripts & Certificates</p>
+                </div>
+                <div class="feature-item">
+                    <div class="doc-type-icon">🔐</div>
+                    <h4>Security Features</h4>
+                    <p>QR Codes, Watermarks & Verification</p>
+                </div>
+                <div class="feature-item">
+                    <div class="doc-type-icon">🌍</div>
+                    <h4>Multi-Country</h4>
+                    <p>India, USA, UK Support</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Type Selection -->
+        <div class="document-type-selector">
+            <div class="doc-type-card active" data-type="teacher">
+                <div class="doc-type-icon">👨‍🏫</div>
+                <h3>Teacher Documents</h3>
+                <p>Generate professional teacher ID cards and salary slips with authentic formatting and security features</p>
+                <ul style="text-align: left; margin-top: 1rem;">
+                    <li>✅ Teacher ID Cards</li>
+                    <li>✅ Salary Slips with Tax Calculations</li>
+                    <li>✅ Government Compliance</li>
+                    <li>✅ Security Watermarks</li>
+                </ul>
+            </div>
+            
+            <div class="doc-type-card" data-type="student">
+                <div class="doc-type-icon">🎓</div>
+                <h3>Student Documents</h3>
+                <p>Create authentic student ID cards, transcripts, and enrollment certificates</p>
+                <ul style="text-align: left; margin-top: 1rem;">
+                    <li>✅ Student ID Cards</li>
+                    <li>✅ Academic Transcripts</li>
+                    <li>✅ Enrollment Certificates</li>
+                    <li>✅ University Verification</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- API Status -->
+        <div class="api-status">
+            <span class="status-indicator status-ready"></span>
+            <strong>Python Backend Status:</strong> <span id="backend-status">Checking...</span>
+        </div>
+
+        <!-- Teacher Document Form -->
+        <div class="enhanced-form" id="teacher-form">
+            <h2>🧑‍🏫 Teacher Document Generation</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="teacher-name">Full Name:</label>
+                    <input type="text" id="teacher-name" placeholder="Dr. Priya Sharma" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacher-id">Employee ID:</label>
+                    <input type="text" id="teacher-id" placeholder="TID-IN-2024-1001" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="teacher-department">Department:</label>
+                    <select id="teacher-department">
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Science">Science</option>
+                        <option value="English">English</option>
+                        <option value="Social Studies">Social Studies</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Physical Education">Physical Education</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="teacher-position">Position:</label>
+                    <input type="text" id="teacher-position" placeholder="Senior Mathematics Teacher" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="teacher-country">Country:</label>
+                    <select id="teacher-country">
+                        <option value="India">India</option>
+                        <option value="USA">United States</option>
+                        <option value="UK">United Kingdom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="teacher-salary">Basic Salary:</label>
+                    <input type="number" id="teacher-salary" placeholder="50000" required>
+                </div>
+            </div>
+
+            <div class="security-features">
+                <h4>🔒 Security Features Included:</h4>
+                <p>✅ QR Code Verification • ✅ Watermarks • ✅ Document Hash • ✅ Barcode ID • ✅ Government Compliance</p>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <input type="checkbox" id="generate-teacher-id" checked> Generate Teacher ID Card
+                </label>
+                <label>
+                    <input type="checkbox" id="generate-salary-slip" checked> Generate Salary Slip
+                </label>
+            </div>
+
+            <button id="generate-teacher-docs" class="generate-btn">
+                🚀 Generate Teacher Documents
+            </button>
+        </div>
+
+        <!-- Student Document Form -->
+        <div class="enhanced-form" id="student-form" style="display: none;">
+            <h2>🎓 Student Document Generation</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="student-name">Full Name:</label>
+                    <input type="text" id="student-name" placeholder="Arjun Patel" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-id">Student ID:</label>
+                    <input type="text" id="student-id" placeholder="SID-IN-2024-2001" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="student-program">Program:</label>
+                    <select id="student-program">
+                        <option value="Bachelor of Technology in Computer Science">B.Tech Computer Science</option>
+                        <option value="Bachelor of Science in Mathematics">B.Sc Mathematics</option>
+                        <option value="Bachelor of Arts in English">B.A English</option>
+                        <option value="Master of Business Administration">MBA</option>
+                        <option value="Bachelor of Engineering">B.E Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="student-year">Academic Year:</label>
+                    <input type="text" id="student-year" placeholder="2023-24" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="student-country">Country:</label>
+                    <select id="student-country">
+                        <option value="India">India</option>
+                        <option value="USA">United States</option>
+                        <option value="UK">United Kingdom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="student-status">Status:</label>
+                    <select id="student-status">
+                        <option value="Active">Active</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="security-features">
+                <h4>🔒 Security Features Included:</h4>
+                <p>✅ University Verification • ✅ Academic Seals • ✅ QR Codes • ✅ Security Strips • ✅ Document Authentication</p>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <input type="checkbox" id="generate-student-id" checked> Generate Student ID Card
+                </label>
+                <label>
+                    <input type="checkbox" id="generate-transcript" checked> Generate Academic Transcript
+                </label>
+                <label>
+                    <input type="checkbox" id="generate-enrollment" checked> Generate Enrollment Certificate
+                </label>
+            </div>
+
+            <button id="generate-student-docs" class="generate-btn">
+                🚀 Generate Student Documents
+            </button>
+        </div>
+
+        <!-- Progress Container -->
+        <div class="progress-container" id="progress-container">
+            <h4>Processing Documents...</h4>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p id="progress-text">Initializing...</p>
+        </div>
+
+        <!-- Document Preview -->
+        <div class="document-preview" id="document-preview">
+            <div class="doc-type-icon">📄</div>
+            <h3>Generated documents will appear here</h3>
+            <p>Click "Generate Documents" to create professional documents with enhanced security features</p>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" style="margin-top: 2rem;"></div>
+    </div>
+
+    <script>
+        // Enhanced UI JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check backend status
+            checkBackendStatus();
+            
+            // Document type selection
+            const docTypeCards = document.querySelectorAll('.doc-type-card');
+            const teacherForm = document.getElementById('teacher-form');
+            const studentForm = document.getElementById('student-form');
+            
+            docTypeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove active class from all cards
+                    docTypeCards.forEach(c => c.classList.remove('active'));
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    
+                    // Show/hide forms
+                    const type = this.dataset.type;
+                    if (type === 'teacher') {
+                        teacherForm.style.display = 'block';
+                        studentForm.style.display = 'none';
+                    } else {
+                        teacherForm.style.display = 'none';
+                        studentForm.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Generate buttons
+            document.getElementById('generate-teacher-docs').addEventListener('click', generateTeacherDocuments);
+            document.getElementById('generate-student-docs').addEventListener('click', generateStudentDocuments);
+        });
+        
+        async function checkBackendStatus() {
+            const statusElement = document.getElementById('backend-status');
+            const statusIndicator = document.querySelector('.status-indicator');
+            
+            try {
+                // Simulate backend check - in real implementation, this would ping the Python API
+                statusElement.textContent = 'Python Backend Ready (Simulation Mode)';
+                statusIndicator.className = 'status-indicator status-ready';
+            } catch (error) {
+                statusElement.textContent = 'Backend Unavailable - Using Simulation Mode';
+                statusIndicator.className = 'status-indicator status-error';
+            }
+        }
+        
+        async function generateTeacherDocuments() {
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const preview = document.getElementById('document-preview');
+            
+            // Show progress
+            progressContainer.style.display = 'block';
+            preview.classList.add('preview-active');
+            
+            // Collect form data
+            const teacherData = {
+                employee_id: document.getElementById('teacher-id').value || 'TID-IN-2024-1001',
+                name: document.getElementById('teacher-name').value || 'Dr. Sample Teacher',
+                department: document.getElementById('teacher-department').value,
+                position: document.getElementById('teacher-position').value || 'Senior Teacher',
+                validity: '2025-12-31'
+            };
+            
+            const salaryData = {
+                basic_salary: parseInt(document.getElementById('teacher-salary').value) || 50000,
+                pay_period: new Date().toISOString().slice(0, 7),
+                pay_date: new Date().toISOString().slice(0, 10)
+            };
+            
+            const country = document.getElementById('teacher-country').value;
+            
+            // Simulate progress
+            const steps = [
+                'Initializing document generation...',
+                'Loading country-specific templates...',
+                'Calculating salary with tax deductions...',
+                'Generating security features...',
+                'Creating QR codes and watermarks...',
+                'Finalizing documents...'
+            ];
+            
+            for (let i = 0; i < steps.length; i++) {
+                progressText.textContent = steps[i];
+                progressFill.style.width = `${(i + 1) * 16.67}%`;
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            try {
+                // Call Python API (simulation mode)
+                const requestData = {
+                    teacher_data: teacherData,
+                    salary_data: salaryData,
+                    country: country,
+                    generate_id_card: document.getElementById('generate-teacher-id').checked,
+                    generate_salary_slip: document.getElementById('generate-salary-slip').checked
+                };
+                
+                // Simulate API call
+                const result = await simulateTeacherGeneration(requestData);
+                
+                if (result.success) {
+                    displayResults(result.results, 'teacher');
+                    progressText.textContent = 'Documents generated successfully!';
+                    progressFill.style.width = '100%';
+                } else {
+                    throw new Error(result.error);
+                }
+                
+            } catch (error) {
+                displayError(error.message);
+                progressText.textContent = 'Error generating documents';
+                progressFill.style.backgroundColor = '#dc3545';
+            }
+            
+            // Hide progress after 2 seconds
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                progressFill.style.width = '0%';
+                progressFill.style.backgroundColor = '';
+            }, 2000);
+        }
+        
+        async function generateStudentDocuments() {
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const preview = document.getElementById('document-preview');
+            
+            // Show progress
+            progressContainer.style.display = 'block';
+            preview.classList.add('preview-active');
+            
+            // Collect form data
+            const studentData = {
+                student_id: document.getElementById('student-id').value || 'SID-IN-2024-2001',
+                name: document.getElementById('student-name').value || 'Sample Student',
+                program: document.getElementById('student-program').value,
+                academic_year: document.getElementById('student-year').value || '2023-24',
+                status: document.getElementById('student-status').value,
+                validity: '2025-12-31'
+            };
+            
+            const country = document.getElementById('student-country').value;
+            
+            // Simulate progress
+            const steps = [
+                'Initializing student document generation...',
+                'Loading university templates...',
+                'Generating academic records...',
+                'Creating security features...',
+                'Adding university verification...',
+                'Finalizing documents...'
+            ];
+            
+            for (let i = 0; i < steps.length; i++) {
+                progressText.textContent = steps[i];
+                progressFill.style.width = `${(i + 1) * 16.67}%`;
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            try {
+                // Call Python API (simulation mode)
+                const requestData = {
+                    student_data: studentData,
+                    country: country,
+                    generate_id_card: document.getElementById('generate-student-id').checked,
+                    generate_transcript: document.getElementById('generate-transcript').checked,
+                    generate_enrollment_cert: document.getElementById('generate-enrollment').checked
+                };
+                
+                // Simulate API call
+                const result = await simulateStudentGeneration(requestData);
+                
+                if (result.success) {
+                    displayResults(result.results, 'student');
+                    progressText.textContent = 'Documents generated successfully!';
+                    progressFill.style.width = '100%';
+                } else {
+                    throw new Error(result.error);
+                }
+                
+            } catch (error) {
+                displayError(error.message);
+                progressText.textContent = 'Error generating documents';
+                progressFill.style.backgroundColor = '#dc3545';
+            }
+            
+            // Hide progress after 2 seconds
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                progressFill.style.width = '0%';
+                progressFill.style.backgroundColor = '';
+            }, 2000);
+        }
+        
+        async function simulateTeacherGeneration(data) {
+            // Simulate Python API response
+            return {
+                success: true,
+                results: {
+                    id_card: `output/teacher_id_${data.teacher_data.employee_id}.png`,
+                    salary_slip: `output/salary_slip_${data.teacher_data.employee_id}_${data.salary_data.pay_period}.pdf`,
+                    teacher_data: data.teacher_data,
+                    salary_data: data.salary_data,
+                    verification_hash: generateHash(data.teacher_data.employee_id + data.teacher_data.name),
+                    security_features: {
+                        qr_code: true,
+                        watermark: true,
+                        barcode: true,
+                        digital_signature: true
+                    }
+                }
+            };
+        }
+        
+        async function simulateStudentGeneration(data) {
+            // Simulate Python API response
+            return {
+                success: true,
+                results: {
+                    id_card: `output/student_id_${data.student_data.student_id}.png`,
+                    transcript: `output/transcript_${data.student_data.student_id}.pdf`,
+                    enrollment_certificate: `output/enrollment_cert_${data.student_data.student_id}.pdf`,
+                    student_data: data.student_data,
+                    verification_hash: generateHash(data.student_data.student_id + data.student_data.name),
+                    security_features: {
+                        qr_code: true,
+                        university_seal: true,
+                        security_strip: true,
+                        academic_verification: true
+                    }
+                }
+            };
+        }
+        
+        function displayResults(results, type) {
+            const preview = document.getElementById('document-preview');
+            const resultsContainer = document.getElementById('results-container');
+            
+            let html = `
+                <div class="enhanced-form">
+                    <h3>✅ Documents Generated Successfully!</h3>
+                    <div class="security-features">
+                        <h4>🔒 Security Features Applied:</h4>
+                        <p>✅ QR Code Verification • ✅ Digital Watermarks • ✅ Document Hash: ${results.verification_hash || 'N/A'}</p>
+                    </div>
+                    <div class="feature-list">
+            `;
+            
+            // Add document links
+            Object.keys(results).forEach(key => {
+                if (key.includes('_') && results[key] && typeof results[key] === 'string' && results[key].includes('output/')) {
+                    const docType = key.replace('_', ' ').toUpperCase();
+                    html += `
+                        <div class="feature-item">
+                            <div class="doc-type-icon">📄</div>
+                            <h4>${docType}</h4>
+                            <p>${results[key]}</p>
+                            <button onclick="downloadDocument('${results[key]}')" class="generate-btn" style="margin-top: 1rem; padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                📥 Download
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+            
+            html += `
+                    </div>
+                    <div class="api-status" style="margin-top: 1rem;">
+                        <strong>Note:</strong> This is a simulation. In production, actual PDF and PNG files would be generated with full security features.
+                    </div>
+                </div>
+            `;
+            
+            resultsContainer.innerHTML = html;
+            
+            // Update preview
+            preview.innerHTML = `
+                <div class="doc-type-icon">✅</div>
+                <h3>Documents Generated Successfully!</h3>
+                <p>Professional ${type} documents with enhanced security features</p>
+            `;
+        }
+        
+        function displayError(error) {
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = `
+                <div class="enhanced-form" style="border-color: #dc3545;">
+                    <h3 style="color: #dc3545;">❌ Error Generating Documents</h3>
+                    <p>${error}</p>
+                    <div class="api-status" style="background: #f8d7da; border-color: #dc3545;">
+                        <strong>Suggestion:</strong> Ensure Python dependencies are installed: pip install -r requirements.txt
+                    </div>
+                </div>
+            `;
+        }
+        
+        function downloadDocument(filePath) {
+            // In a real implementation, this would trigger file download
+            alert(`Download functionality for: ${filePath}\\n\\nIn production, this would download the actual generated document.`);
+        }
+        
+        function generateHash(input) {
+            // Simple hash simulation
+            let hash = 0;
+            for (let i = 0; i < input.length; i++) {
+                const char = input.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash).toString(16).substring(0, 16);
+        }
+    </script>
+</body>
+</html>
