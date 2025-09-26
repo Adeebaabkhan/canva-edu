@@ -54,10 +54,34 @@ const faker = {
             'Special Education', 'Administration', 'Student Services'
         ],
         subjects: [
-            'Mathematics', 'English Language Arts', 'Science', 'Social Studies', 'Art',
-            'Music', 'Physical Education', 'Computer Science', 'Foreign Languages',
-            'Chemistry', 'Physics', 'Biology', 'History', 'Geography', 'Drama'
-        ]
+            'Mathematics', 'English Language Arts', 'Science', 'Biology', 'Chemistry', 'Physics',
+            'Social Studies', 'History', 'Geography', 'Art', 'Music', 'Physical Education', 
+            'Computer Science', 'Foreign Languages', 'Spanish', 'French', 'Drama/Theater',
+            'Special Education', 'ESL/ELL'
+        ],
+        gradeLevels: [
+            'Elementary (K-5)', 'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5',
+            'Middle School (6-8)', 'Grade 6', 'Grade 7', 'Grade 8',
+            'High School (9-12)', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Multi-Grade'
+        ],
+        positionTypes: [
+            'Full-time', 'Part-time', 'Substitute', 'Special Education', 'ESL/ELL',
+            'Department Head', 'Lead Teacher', 'Assistant Teacher'
+        ],
+        experienceLevels: ['entry', 'mid', 'senior', 'master'],
+        benefits: {
+            health: ['Health Insurance', 'Dental Insurance', 'Vision Insurance', 'Mental Health Coverage'],
+            retirement: ['403(b) Plan', 'Pension Plan', 'Teacher Retirement System', 'Social Security'],
+            professional: ['Professional Development Fund', 'Conference Attendance', 'Graduate Course Reimbursement'],
+            classroom: ['Classroom Supply Stipend', 'Technology Allowance', 'Book Allowance'],
+            leave: ['Sick Leave', 'Personal Leave', 'Bereavement Leave', 'Maternity/Paternity Leave']
+        },
+        payStructures: {
+            'monthly': '12-month pay',
+            'academic': '10-month academic year',
+            'biweekly': 'Bi-weekly payments',
+            'summer': 'Summer session payments'
+        }
     },
 
     // Academic qualifications for teachers
@@ -135,29 +159,76 @@ const faker = {
     generateTeacherSalary: function(country, experienceLevel = 'mid') {
         const salaryRanges = {
             'India': {
-                'entry': {min: 25000, max: 40000},    // ₹25,000 - ₹40,000 per month
-                'mid': {min: 40000, max: 70000},      // ₹40,000 - ₹70,000 per month
-                'senior': {min: 70000, max: 120000}   // ₹70,000 - ₹1,20,000 per month
+                'entry': {min: 25000, max: 40000},      // ₹25,000 - ₹40,000 per month
+                'mid': {min: 40000, max: 70000},        // ₹40,000 - ₹70,000 per month
+                'senior': {min: 70000, max: 120000},    // ₹70,000 - ₹1,20,000 per month
+                'master': {min: 120000, max: 180000}    // ₹1,20,000 - ₹1,80,000 per month
             },
             'USA': {
-                'entry': {min: 3500, max: 4500},      // $3,500 - $4,500 per month
-                'mid': {min: 4500, max: 6500},        // $4,500 - $6,500 per month
-                'senior': {min: 6500, max: 9000}      // $6,500 - $9,000 per month
+                'entry': {min: 3500, max: 4500},        // $3,500 - $4,500 per month
+                'mid': {min: 4500, max: 6500},          // $4,500 - $6,500 per month
+                'senior': {min: 6500, max: 9000},       // $6,500 - $9,000 per month
+                'master': {min: 9000, max: 12000}       // $9,000 - $12,000 per month
             },
             'UK': {
-                'entry': {min: 2200, max: 3000},      // £2,200 - £3,000 per month
-                'mid': {min: 3000, max: 4200},        // £3,000 - £4,200 per month
-                'senior': {min: 4200, max: 6000}      // £4,200 - £6,000 per month
+                'entry': {min: 2200, max: 3000},        // £2,200 - £3,000 per month
+                'mid': {min: 3000, max: 4200},          // £3,000 - £4,200 per month
+                'senior': {min: 4200, max: 6000},       // £4,200 - £6,000 per month
+                'master': {min: 6000, max: 8500}        // £6,000 - £8,500 per month
             },
             'Australia': {
-                'entry': {min: 4500, max: 6000},      // AUD 4,500 - 6,000 per month
-                'mid': {min: 6000, max: 8500},        // AUD 6,000 - 8,500 per month
-                'senior': {min: 8500, max: 12000}     // AUD 8,500 - 12,000 per month
+                'entry': {min: 4500, max: 6000},        // AUD 4,500 - 6,000 per month
+                'mid': {min: 6000, max: 8500},          // AUD 6,000 - 8,500 per month
+                'senior': {min: 8500, max: 12000},      // AUD 8,500 - 12,000 per month
+                'master': {min: 12000, max: 16000}      // AUD 12,000 - 16,000 per month
+            },
+            'Canada': {
+                'entry': {min: 3800, max: 5000},        // CAD 3,800 - 5,000 per month
+                'mid': {min: 5000, max: 7000},          // CAD 5,000 - 7,000 per month
+                'senior': {min: 7000, max: 9500},       // CAD 7,000 - 9,500 per month
+                'master': {min: 9500, max: 12500}       // CAD 9,500 - 12,500 per month
+            },
+            'Singapore': {
+                'entry': {min: 3000, max: 4200},        // SGD 3,000 - 4,200 per month
+                'mid': {min: 4200, max: 6000},          // SGD 4,200 - 6,000 per month
+                'senior': {min: 6000, max: 8500},       // SGD 6,000 - 8,500 per month
+                'master': {min: 8500, max: 11000}       // SGD 8,500 - 11,000 per month
+            },
+            'Philippines': {
+                'entry': {min: 25000, max: 35000},      // PHP 25,000 - 35,000 per month
+                'mid': {min: 35000, max: 55000},        // PHP 35,000 - 55,000 per month
+                'senior': {min: 55000, max: 80000},     // PHP 55,000 - 80,000 per month
+                'master': {min: 80000, max: 120000}     // PHP 80,000 - 120,000 per month
             }
         };
 
         const countryRanges = salaryRanges[country] || salaryRanges['USA'];
         const range = countryRanges[experienceLevel] || countryRanges['mid'];
         return faker.datatype.number(range);
+    },
+
+    // Generate realistic school district names
+    generateSchoolDistrict: function(country, region = null) {
+        const districts = {
+            'USA': [
+                'Metropolitan Public Schools', 'City Unified School District', 'County Educational Services',
+                'Regional School District', 'Independent School District', 'Community School Corporation'
+            ],
+            'UK': [
+                'Borough Council Education', 'County Council Schools', 'Academy Trust',
+                'Local Education Authority', 'Multi-Academy Trust', 'Foundation Trust'
+            ],
+            'Canada': [
+                'Public School Board', 'Catholic School Board', 'Regional School Division',
+                'School District', 'Educational Services', 'Public School Division'
+            ],
+            'Australia': [
+                'Department of Education', 'Catholic Education Office', 'Independent Schools',
+                'Education Queensland', 'NSW Department of Education', 'Education Department'
+            ]
+        };
+        
+        const countryDistricts = districts[country] || districts['USA'];
+        return faker.random.arrayElement(countryDistricts);
     }
 };

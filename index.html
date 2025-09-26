@@ -25,8 +25,15 @@
 
                 <form id="payslip-form">
                     <div class="form-group">
-                        <label for="name">Full Name:</label>
-                        <input type="text" id="name" name="name" placeholder="Enter employee name" required>
+                        <div class="input-mode-selector">
+                            <label for="name">Full Name:</label>
+                            <div class="mode-toggle">
+                                <button type="button" class="mode-btn active" data-target="name" data-mode="manual">Manual</button>
+                                <button type="button" class="mode-btn" data-target="name" data-mode="auto">Auto-Generate</button>
+                            </div>
+                        </div>
+                        <input type="text" id="name" name="name" placeholder="Enter teacher name" required>
+                        <div class="suggestions-container" id="name-suggestions" style="display: none;"></div>
                     </div>
 
                     <div class="form-row">
@@ -51,21 +58,110 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="school">Select School:</label>
+                        <div class="input-mode-selector">
+                            <label for="school">Select School:</label>
+                            <div class="mode-toggle">
+                                <button type="button" class="mode-btn active" data-target="school" data-mode="manual">Manual</button>
+                                <button type="button" class="mode-btn" data-target="school" data-mode="auto">Auto-Generate</button>
+                            </div>
+                        </div>
                         <select id="school" name="school" required>
                             <option value="">Please select a country first</option>
                         </select>
+                        <input type="text" id="school-manual" name="school-manual" placeholder="Enter school name" style="display: none;">
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="department">Department:</label>
-                            <input type="text" id="department" name="department" placeholder="Engineering" required>
+                            <input type="text" id="department" name="department" placeholder="Mathematics Department" required>
                         </div>
 
                         <div class="form-group">
                             <label for="position">Position:</label>
-                            <input type="text" id="position" name="position" placeholder="Software Developer" required>
+                            <input type="text" id="position" name="position" placeholder="High School Math Teacher" required>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Educational Features -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="subject">Subject Taught:</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="English Language Arts">English Language Arts</option>
+                                <option value="Science">Science</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Social Studies">Social Studies</option>
+                                <option value="History">History</option>
+                                <option value="Geography">Geography</option>
+                                <option value="Art">Art</option>
+                                <option value="Music">Music</option>
+                                <option value="Physical Education">Physical Education</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Foreign Languages">Foreign Languages</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="Drama/Theater">Drama/Theater</option>
+                                <option value="Special Education">Special Education</option>
+                                <option value="ESL/ELL">ESL/ELL</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="grade-level">Grade Level:</label>
+                            <select id="grade-level" name="grade-level" required>
+                                <option value="">Select Grade Level</option>
+                                <option value="Elementary (K-5)">Elementary (K-5)</option>
+                                <option value="Kindergarten">Kindergarten</option>
+                                <option value="Grade 1">Grade 1</option>
+                                <option value="Grade 2">Grade 2</option>
+                                <option value="Grade 3">Grade 3</option>
+                                <option value="Grade 4">Grade 4</option>
+                                <option value="Grade 5">Grade 5</option>
+                                <option value="Middle School (6-8)">Middle School (6-8)</option>
+                                <option value="Grade 6">Grade 6</option>
+                                <option value="Grade 7">Grade 7</option>
+                                <option value="Grade 8">Grade 8</option>
+                                <option value="High School (9-12)">High School (9-12)</option>
+                                <option value="Grade 9">Grade 9</option>
+                                <option value="Grade 10">Grade 10</option>
+                                <option value="Grade 11">Grade 11</option>
+                                <option value="Grade 12">Grade 12</option>
+                                <option value="Multi-Grade">Multi-Grade</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="position-type">Teaching Position:</label>
+                            <select id="position-type" name="position-type" required>
+                                <option value="">Select Position Type</option>
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Substitute">Substitute</option>
+                                <option value="Special Education">Special Education</option>
+                                <option value="ESL/ELL">ESL/ELL</option>
+                                <option value="Department Head">Department Head</option>
+                                <option value="Lead Teacher">Lead Teacher</option>
+                                <option value="Assistant Teacher">Assistant Teacher</option>
+                                <option value="Student Teacher">Student Teacher</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="experience-level">Experience Level:</label>
+                            <select id="experience-level" name="experience-level" required>
+                                <option value="">Select Experience</option>
+                                <option value="entry">Entry Level (0-3 years)</option>
+                                <option value="mid">Mid Level (4-10 years)</option>
+                                <option value="senior">Senior Level (10+ years)</option>
+                                <option value="master">Master Teacher (15+ years)</option>
+                            </select>
                         </div>
                     </div>
 
@@ -398,12 +494,19 @@
 
             // Generate realistic K-12 teacher data
             const teacherName = faker.name.teacherName(country);
-            const experienceLevel = faker.random.arrayElement(['entry', 'mid', 'senior']);
+            const experienceLevel = faker.random.arrayElement(['entry', 'mid', 'senior', 'master']);
             
             document.getElementById('name').value = teacherName;
             document.getElementById('employee-id').value = faker.generateTeacherID(country);
             document.getElementById('department').value = faker.random.arrayElement(faker.education.departments);
             document.getElementById('position').value = faker.random.arrayElement(faker.education.jobTitles);
+            
+            // Populate new educational fields
+            document.getElementById('subject').value = faker.random.arrayElement(faker.education.subjects);
+            document.getElementById('grade-level').value = faker.random.arrayElement(faker.education.gradeLevels);
+            document.getElementById('position-type').value = faker.random.arrayElement(faker.education.positionTypes);
+            document.getElementById('experience-level').value = experienceLevel;
+            
             document.getElementById('basic-salary').value = faker.generateTeacherSalary(country, experienceLevel);
             
             // Select a random school
@@ -436,12 +539,22 @@
             let totalDeductions = 0;
             let totalBenefits = 0;
 
-            // K-12 Teacher Benefits (added to gross)
+            // Enhanced K-12 Teacher Benefits (added to gross)
             const profDevAllowance = gross * 0.05; // 5% professional development allowance
             const educationGrant = gross * 0.03;   // 3% education grant
+            const classroomSupplies = gross * 0.02; // 2% classroom supply stipend
+            const technologyAllowance = gross * 0.015; // 1.5% technology allowance
+            
             benefits['Professional Development'] = profDevAllowance;
             benefits['Education Grant'] = educationGrant;
-            totalBenefits += profDevAllowance + educationGrant;
+            benefits['Classroom Supplies'] = classroomSupplies;
+            benefits['Technology Allowance'] = technologyAllowance;
+            
+            // Additional benefits for higher experience levels or positions
+            const healthInsuranceValue = gross * 0.08; // 8% health insurance employer contribution
+            benefits['Health Insurance (Employer)'] = healthInsuranceValue;
+            
+            totalBenefits += profDevAllowance + educationGrant + classroomSupplies + technologyAllowance + healthInsuranceValue;
 
             const grossWithBenefits = gross + totalBenefits;
 
@@ -450,34 +563,48 @@
             deductions['Income Tax'] = incomeTax;
             totalDeductions += incomeTax;
 
-            // K-12 Teacher specific deductions
+            // Enhanced K-12 Teacher specific deductions
             const teacherUnionFee = gross * 0.02;     // 2% teacher union fee
             const continuingEducation = gross * 0.015; // 1.5% continuing education
+            const healthInsuranceEmp = gross * 0.04;   // 4% employee health insurance contribution
+            const professionalLiability = gross * 0.005; // 0.5% professional liability insurance
+            
             deductions['Teacher Union Fee'] = teacherUnionFee;
             deductions['Continuing Education'] = continuingEducation;
-            totalDeductions += teacherUnionFee + continuingEducation;
+            deductions['Health Insurance (Employee)'] = healthInsuranceEmp;
+            deductions['Professional Liability'] = professionalLiability;
+            
+            totalDeductions += teacherUnionFee + continuingEducation + healthInsuranceEmp + professionalLiability;
 
-            // Country-specific deductions
+            // Country-specific deductions and retirement
             if (country === 'India') {
                 const providentFund = grossWithBenefits * config.providentFund;
+                const esi = gross * 0.0175; // Employee State Insurance
                 deductions['Provident Fund'] = providentFund;
-                totalDeductions += providentFund;
+                deductions['ESI'] = esi;
+                totalDeductions += providentFund + esi;
             } else if (country === 'USA') {
                 const socialSecurity = grossWithBenefits * config.socialSecurity;
                 const medicare = grossWithBenefits * config.medicare;
+                const retirement403b = gross * 0.05; // 5% 403(b) contribution
                 deductions['Social Security'] = socialSecurity;
                 deductions['Medicare'] = medicare;
-                totalDeductions += socialSecurity + medicare;
+                deductions['403(b) Retirement'] = retirement403b;
+                totalDeductions += socialSecurity + medicare + retirement403b;
             } else if (country === 'UK') {
                 const nationalInsurance = grossWithBenefits * config.nationalInsurance;
+                const teachersPension = gross * 0.072; // Teacher's Pension Scheme
                 deductions['National Insurance'] = nationalInsurance;
-                totalDeductions += nationalInsurance;
+                deductions['Teachers Pension'] = teachersPension;
+                totalDeductions += nationalInsurance + teachersPension;
             } else if (country === 'Canada') {
                 const cpp = grossWithBenefits * config.cpp;
                 const ei = grossWithBenefits * config.ei;
+                const teachersPension = gross * 0.08; // Teachers' Pension Plan
                 deductions['CPP'] = cpp;
                 deductions['Employment Insurance'] = ei;
-                totalDeductions += cpp + ei;
+                deductions['Teachers Pension'] = teachersPension;
+                totalDeductions += cpp + ei + teachersPension;
             } else if (country === 'Australia') {
                 const superannuation = grossWithBenefits * config.superannuation;
                 deductions['Superannuation'] = superannuation;
@@ -488,8 +615,12 @@
                 totalDeductions += cpf;
             } else if (country === 'Philippines') {
                 const sss = grossWithBenefits * config.sss;
+                const pagibig = gross * 0.02; // Pag-IBIG Fund
+                const philhealth = gross * 0.025; // PhilHealth
                 deductions['SSS'] = sss;
-                totalDeductions += sss;
+                deductions['Pag-IBIG'] = pagibig;
+                deductions['PhilHealth'] = philhealth;
+                totalDeductions += sss + pagibig + philhealth;
             }
 
             const netSalary = grossWithBenefits - totalDeductions;
@@ -528,7 +659,16 @@
         // Generate professional payslip
         function generatePayslip(formData, photoUrl) {
             const country = formData.get('country');
-            const schoolString = formData.get('school');
+            let schoolString = formData.get('school');
+            
+            // Handle manual school input
+            const manualSchool = formData.get('school-manual');
+            if (manualSchool && manualSchool.trim() !== '') {
+                schoolString = manualSchool;
+            } else if (!schoolString || schoolString === '') {
+                schoolString = 'Educational Institution, Location';
+            }
+            
             const basicSalary = formData.get('basic-salary');
             const salaryBreakdown = calculateSalary(basicSalary, country);
             
@@ -583,6 +723,22 @@
                                     <span>${formData.get('position')}</span>
                                 </div>
                                 <div class="info-item">
+                                    <label>Subject:</label>
+                                    <span>${formData.get('subject')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Grade Level:</label>
+                                    <span>${formData.get('grade-level')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Position Type:</label>
+                                    <span>${formData.get('position-type')}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Experience:</label>
+                                    <span>${formData.get('experience-level')}</span>
+                                </div>
+                                <div class="info-item">
                                     <label>Country:</label>
                                     <span>${formData.get('country')}</span>
                                 </div>
@@ -635,19 +791,82 @@
                             <span class="amount">${formatCurrency(salaryBreakdown.netSalary, country)}</span>
                         </div>
                     </div>
-
-                    <div class="compliance-footer">
-                        <div class="disclaimer">
-                            <strong>FOR EDUCATIONAL VERIFICATION PURPOSES ONLY</strong>
-                            <p>This document is generated for educational and training purposes. It should not be used for any official, legal, or financial proceedings.</p>
-                        </div>
-                        <div class="generation-info">
-                            <p>Generated on: ${new Date().toLocaleString()}</p>
-                            <p>Document ID: EDU-${Date.now()}</p>
-                        </div>
-                    </div>
                 </div>
             `;
+        }
+
+        // Setup mode toggle functionality
+        function setupModeToggles() {
+            const modeButtons = document.querySelectorAll('.mode-btn');
+            
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const target = this.dataset.target;
+                    const mode = this.dataset.mode;
+                    const targetGroup = this.closest('.form-group');
+                    const siblingButtons = targetGroup.querySelectorAll('.mode-btn');
+                    
+                    // Update button states
+                    siblingButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Toggle input visibility and functionality
+                    if (target === 'school') {
+                        const selectElement = document.getElementById('school');
+                        const manualInput = document.getElementById('school-manual');
+                        
+                        if (mode === 'manual') {
+                            selectElement.style.display = 'none';
+                            manualInput.style.display = 'block';
+                            manualInput.required = true;
+                            selectElement.required = false;
+                        } else {
+                            selectElement.style.display = 'block';
+                            manualInput.style.display = 'none';
+                            selectElement.required = true;
+                            manualInput.required = false;
+                        }
+                    } else if (target === 'name') {
+                        const nameInput = document.getElementById('name');
+                        if (mode === 'auto') {
+                            showNameSuggestions();
+                        } else {
+                            hideNameSuggestions();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Show name suggestions
+        function showNameSuggestions() {
+            const country = document.getElementById('country').value;
+            if (!country) return;
+            
+            const suggestionsContainer = document.getElementById('name-suggestions');
+            suggestionsContainer.style.display = 'block';
+            
+            // Generate 5 random teacher names
+            const suggestions = [];
+            for (let i = 0; i < 5; i++) {
+                suggestions.push(faker.name.teacherName(country));
+            }
+            
+            suggestionsContainer.innerHTML = suggestions.map(name => 
+                `<div class="suggestion-item" onclick="selectNameSuggestion('${name}')">${name}</div>`
+            ).join('');
+        }
+
+        // Hide name suggestions
+        function hideNameSuggestions() {
+            const suggestionsContainer = document.getElementById('name-suggestions');
+            suggestionsContainer.style.display = 'none';
+        }
+
+        // Select name suggestion
+        function selectNameSuggestion(name) {
+            document.getElementById('name').value = name;
+            hideNameSuggestions();
         }
 
         // Handle photo preview
@@ -678,6 +897,9 @@
             document.getElementById('country').addEventListener('change', function(event) {
                 populateSchools(event.target.value);
             });
+
+            // Mode toggle functionality
+            setupModeToggles();
             
             // Form submission
             document.getElementById('payslip-form').addEventListener('submit', function(event) {
