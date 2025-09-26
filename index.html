@@ -983,7 +983,7 @@
             });
         }
 
-        // Download payslip function (simplified)
+        // Enhanced instant download function
         async function downloadPayslip(format, quality, customName) {
             const payslipElement = document.querySelector('.payslip-document');
             if (!payslipElement) {
@@ -998,18 +998,13 @@
                 const filename = customName || generateSmartFilename();
                 
                 if (format === 'pdf') {
-                    // Use browser's print to PDF functionality
-                    setTimeout(() => {
-                        window.print();
-                        hideDownloadProgress();
-                    }, 1000);
-                } else {
-                    // For now, show message about image formats
-                    alert(`${format.toUpperCase()} download will be available once external libraries are loaded. For now, you can use Print to PDF or take a screenshot.`);
-                    hideDownloadProgress();
+                    await downloadAsPDF(payslipElement, filename, quality);
+                } else if (format === 'jpg' || format === 'png') {
+                    await downloadAsImage(payslipElement, filename, format, quality);
                 }
 
                 addToDownloadHistory(filename);
+                hideDownloadProgress();
             } catch (error) {
                 console.error('Download failed:', error);
                 alert('Download failed. Please try again.');
@@ -1017,14 +1012,102 @@
             }
         }
 
-        // Simplified PDF download using print
+        // Clean PDF download using print-only CSS
         async function downloadAsPDF(element, filename, quality) {
-            window.print();
+            // Add print-only class to body to hide everything except payslip
+            document.body.classList.add('print-only-payslip');
+            
+            // Small delay to ensure styles are applied
+            setTimeout(() => {
+                window.print();
+                
+                // Remove the class after printing
+                setTimeout(() => {
+                    document.body.classList.remove('print-only-payslip');
+                }, 1000);
+            }, 100);
         }
 
-        // Placeholder for image download
+        // Simple image download using DOM-to-Canvas conversion
         async function downloadAsImage(element, filename, format, quality) {
-            alert(`${format.toUpperCase()} download feature coming soon!`);
+            try {
+                // Create a canvas from the payslip element
+                const canvas = await domToCanvas(element, quality);
+                
+                // Convert canvas to blob and download
+                const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+                const imageQuality = format === 'jpg' ? 0.95 : undefined;
+                
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${filename}.${format}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, mimeType, imageQuality);
+            } catch (error) {
+                console.error('Image download failed:', error);
+                // Fallback: provide instructions for manual screenshot
+                alert(`Image download not fully supported in this browser. Please:\n1. Right-click on the payslip\n2. Select "Save image as..." or take a screenshot\n3. Or use PDF download which works on all browsers`);
+            }
+        }
+
+        // Convert DOM element to canvas using SVG foreignObject
+        async function domToCanvas(element, quality) {
+            const scale = quality / 96;
+            const rect = element.getBoundingClientRect();
+            const width = rect.width * scale;
+            const height = rect.height * scale;
+
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            // Set white background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+
+            // Get element styles and content
+            const serializer = new XMLSerializer();
+            const clonedElement = element.cloneNode(true);
+            
+            // Create SVG with foreignObject
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', rect.width);
+            svg.setAttribute('height', rect.height);
+            svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
+
+            const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+            foreignObject.setAttribute('width', '100%');
+            foreignObject.setAttribute('height', '100%');
+            
+            // Add styles to the cloned element
+            const styles = getComputedStyle(element);
+            const styleStr = Array.from(styles).map(key => 
+                `${key}: ${styles.getPropertyValue(key)};`
+            ).join(' ');
+            clonedElement.setAttribute('style', styleStr);
+
+            foreignObject.appendChild(clonedElement);
+            svg.appendChild(foreignObject);
+
+            const svgString = serializer.serializeToString(svg);
+            const img = new Image();
+            
+            return new Promise((resolve, reject) => {
+                img.onload = () => {
+                    ctx.scale(scale, scale);
+                    ctx.drawImage(img, 0, 0);
+                    resolve(canvas);
+                };
+                img.onerror = reject;
+                img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+            });
         }
 
         // Generate smart filename
