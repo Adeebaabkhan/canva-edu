@@ -513,7 +513,8 @@ body {
     }
     
     .form-section,
-    .app-header {
+    .app-header,
+    .download-panel {
         display: none;
     }
     
@@ -522,6 +523,7 @@ body {
         border: 2px solid #000;
         margin: 0;
         max-width: none;
+        page-break-inside: avoid;
     }
     
     .company-header {
@@ -532,6 +534,25 @@ body {
         background: #000 !important;
         color: var(--white) !important;
     }
+}
+
+/* Enhanced print-only mode for clean payslip downloads */
+.print-only-payslip .form-section,
+.print-only-payslip .app-header,
+.print-only-payslip .download-panel {
+    display: none !important;
+}
+
+.print-only-payslip .payslip-output {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.print-only-payslip .payslip-document {
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: none !important;
 }
 
 /* Enhanced Download Panel (Canva-style) */
