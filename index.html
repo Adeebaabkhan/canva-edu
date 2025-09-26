@@ -662,8 +662,11 @@
             let schoolString = formData.get('school');
             
             // Handle manual school input
-            if (!schoolString || schoolString === '') {
-                schoolString = formData.get('school-manual') || 'Educational Institution, Location';
+            const manualSchool = formData.get('school-manual');
+            if (manualSchool && manualSchool.trim() !== '') {
+                schoolString = manualSchool;
+            } else if (!schoolString || schoolString === '') {
+                schoolString = 'Educational Institution, Location';
             }
             
             const basicSalary = formData.get('basic-salary');
