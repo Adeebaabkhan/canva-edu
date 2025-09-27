@@ -1,0 +1,33 @@
+{
+    "processing": {
+        "max_image_size": [1920, 1080],
+        "jpeg_quality": 85,
+        "png_compression": 6,
+        "cache_size": 100,
+        "max_workers": 4,
+        "timeout": 30,
+        "retry_count": 3,
+        "fallback_enabled": true,
+        "memory_limit_mb": 512
+    },
+    "image_sources": [
+        "https://picsum.photos/{width}/{height}",
+        "https://via.placeholder.com/{width}x{height}",
+        "https://dummyimage.com/{width}x{height}/cccccc/969696",
+        "https://fakeimg.pl/{width}x{height}/"
+    ],
+    "output": {
+        "directory": "output",
+        "receipt_format": "PDF",
+        "id_card_format": "PNG",
+        "id_card_template": "modern",
+        "include_qr_code": true
+    },
+    "institution": {
+        "name": "CANVA EDUCATIONAL INSTITUTE",
+        "address": "123 Education Street, Learning City",
+        "phone": "+1-555-EDU-CANVA",
+        "email": "info@canva-edu.example.com",
+        "website": "https://canva-edu.example.com"
+    }
+}
