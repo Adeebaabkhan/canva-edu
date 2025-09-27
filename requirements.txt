@@ -1,0 +1,21 @@
+# Core dependencies for ufixed.py
+# Image processing and manipulation
+Pillow>=8.0.0
+
+# HTTP requests with retry logic
+requests>=2.25.0
+
+# QR code generation
+qrcode[pil]>=6.1
+
+# PDF generation
+reportlab>=3.5.0
+
+# Optional performance enhancements
+numpy>=1.19.0
+
+# System monitoring for memory management
+psutil>=5.8.0
+
+# Additional utilities
+urllib3>=1.26.0
